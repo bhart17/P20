@@ -7,16 +7,15 @@ namespace Ui {
 class Window;
 }
 
-class Window : public QMainWindow
-{
+class Window : public QMainWindow {
     Q_OBJECT
-    
-public:
+
+   public:
     explicit Window(QWidget *parent = 0);
     ~Window();
-    
-private:
+
+   private:
     Ui::Window *ui;
 };
 
-#endif // WINDOW_H
+#endif  // WINDOW_H

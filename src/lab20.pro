@@ -6,7 +6,7 @@
 
 QT       += core gui
 
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
+QT += widgets
 
 TARGET = lab20
 TEMPLATE = app
@@ -19,4 +19,5 @@ HEADERS  += window.h
 
 FORMS    += window.ui
 
-LIBS += -L/usr/local/lib -lwiringPi -lpthread
+#LIBS += -L/usr/local/lib -lwiringPi -lpthread
+LIBS += -L/usr/local/lib -lpthread
