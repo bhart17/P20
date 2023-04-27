@@ -18,7 +18,6 @@ void DrawArea::paintEvent(QPaintEvent* event) {
 void DrawArea::mousePressEvent(QMouseEvent* event) {
     lines.append(QList<QLine>{});
     last = event->position().toPoint();
-    // this->update();
 }
 
 void DrawArea::mouseMoveEvent(QMouseEvent* event) {
@@ -26,11 +25,11 @@ void DrawArea::mouseMoveEvent(QMouseEvent* event) {
     if ((event->position() - last).manhattanLength() > 10) {
         lines.last().append(QLine{last, event->position().toPoint()});
         last = event->position().toPoint();
-        this->update();
+        update();
     }
 }
 
 void DrawArea::mouseReleaseEvent(QMouseEvent* event) {
     lines.last().append(QLine{last, event->position().toPoint()});
-    this->update();
+    update();
 }
