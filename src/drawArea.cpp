@@ -15,21 +15,8 @@ void DrawArea::paintEvent(QPaintEvent* event) {
     event->accept();
 }
 
-void DrawArea::mousePressEvent(QMouseEvent* event) {
-    lines.append(QList<QLine>{});
-    last = event->position().toPoint();
-}
-
-void DrawArea::mouseMoveEvent(QMouseEvent* event) {
-    // min distance between points
-    if ((event->position() - last).manhattanLength() > 10) {
-        lines.last().append(QLine{last, event->position().toPoint()});
-        last = event->position().toPoint();
-        update();
-    }
-}
-
-void DrawArea::mouseReleaseEvent(QMouseEvent* event) {
-    lines.last().append(QLine{last, event->position().toPoint()});
+void DrawArea::clearScreen() {
+    // potentially this is a memory leak
+    lines.clear();
     update();
 }

@@ -1,8 +1,8 @@
 #ifndef DRAWAREA_H
 #define DRAWAREA_H
 
-#include <QPainter>
 #include <QMouseEvent>
+#include <QPainter>
 #include <QWidget>
 
 class DrawArea : public QWidget {
@@ -11,11 +11,11 @@ class DrawArea : public QWidget {
    public:
     DrawArea(QWidget *parent = nullptr);
 
+   public slots:
+    void clearScreen();
+
    protected:
     void paintEvent(QPaintEvent *event);
-    void mousePressEvent(QMouseEvent* event);
-    void mouseReleaseEvent(QMouseEvent *event);
-    void mouseMoveEvent(QMouseEvent *event);
     QPoint last;
     QList<QList<QLine>> lines;
 };

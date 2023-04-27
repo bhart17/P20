@@ -14,10 +14,16 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         window.cpp\
-        drawArea.cpp
+        drawArea.cpp \
+        sendWindow.cpp \
+        receiveWindow.cpp \
+        drawAreaSend.cpp
 
 HEADERS  += window.h\
-        drawArea.h
+        drawArea.h \
+        sendWindow.h \
+        receiveWindow.h \
+        drawAreaSend.h
 
 #FORMS    += window.ui
 

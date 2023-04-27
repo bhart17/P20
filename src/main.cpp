@@ -4,7 +4,8 @@
 #include <QApplication>
 #include <QDebug>
 
-#include "window.h"
+#include "receiveWindow.h"
+#include "sendWindow.h"
 
 void* worker(void* thread_id) {
     long tid = (long)thread_id;
@@ -23,10 +24,10 @@ int main(int argc, char* argv[]) {
 
     // setup Qt GUI
     QApplication a(argc, argv);
-    Window w;
-    // Window w2;
-    w.show();
-    // w2.show();
+    SendWindow send;
+    ReceiveWindow receive;
+    send.show();
+    receive.show();
 
     // starting worker thread(s)
     // int rc;
