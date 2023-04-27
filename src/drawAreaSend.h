@@ -13,8 +13,8 @@ class DrawAreaSend : public DrawArea {
 
    protected:
     void mousePressEvent(QMouseEvent *event);
-    void mouseReleaseEvent(QMouseEvent *event);
+    // void mouseReleaseEvent(QMouseEvent *event);
     void mouseMoveEvent(QMouseEvent *event);
 };
 
-#endif
+#endif  // DRAWAREASEND_H

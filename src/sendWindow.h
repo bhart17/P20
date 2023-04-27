@@ -1,8 +1,8 @@
 #ifndef SENDWINDOW_H
 #define SENDWINDOW_H
 
-#include "window.h"
 #include "drawAreaSend.h"
+#include "window.h"
 
 class SendWindow : public Window {
     Q_OBJECT
@@ -17,4 +17,4 @@ class SendWindow : public Window {
     QAction *clearScreen;
 };
 
-#endif
+#endif  // SENDWINDOW_H

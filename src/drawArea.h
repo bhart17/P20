@@ -16,6 +16,8 @@ class DrawArea : public QWidget {
 
    protected:
     void paintEvent(QPaintEvent *event);
+    void startLine(QPointF start);
+    void continueLine(QPointF next);
     QPoint last;
     QList<QList<QLine>> lines;
 };

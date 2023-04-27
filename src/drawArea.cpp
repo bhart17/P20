@@ -20,3 +20,16 @@ void DrawArea::clearScreen() {
     lines.clear();
     update();
 }
+
+void DrawArea::startLine(QPointF start) {
+    lines.append(QList<QLine>{});
+    last = start.toPoint();
+}
+
+void DrawArea::continueLine(QPointF next) {
+    if ((next - last).manhattanLength() > 10) {
+        lines.last().append(QLine{last, next.toPoint()});
+        last = next.toPoint();
+        update();
+    }
+}
