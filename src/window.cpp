@@ -1,9 +1,10 @@
 #include "window.h"
 
-#include "ui_window.h"
-
-Window::Window(QWidget *parent) : QMainWindow(parent), ui(new Ui::Window) {
-    ui->setupUi(this);
+Window::Window(QWidget* parent)
+    : QMainWindow(parent), drawArea(new DrawArea(this)) {
+    setCentralWidget(drawArea);
+    setWindowTitle(tr("Send"));
+    resize(500, 500);
 }
 
-Window::~Window() { delete ui; }
+Window::~Window() { delete drawArea; }

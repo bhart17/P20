@@ -14,12 +14,10 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         window.cpp\
-        drawArea.cpp
 
 HEADERS  += window.h\
-        drawArea.h
 
-#FORMS    += window.ui
+FORMS    += window.ui
 
 #LIBS += -L/usr/local/lib -lwiringPi -lpthread
 LIBS += -L/usr/local/lib -lpthread

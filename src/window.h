@@ -1,11 +1,16 @@
 #ifndef WINDOW_H
 #define WINDOW_H
 
+#include <QPainter>
 #include <QMainWindow>
+#include <QMouseEvent>
 
-namespace Ui {
-class Window;
-}
+#include "drawArea.h"
+
+// namespace Ui {
+// class Window;
+// }
+
 
 class Window : public QMainWindow {
     Q_OBJECT
@@ -14,8 +19,16 @@ class Window : public QMainWindow {
     explicit Window(QWidget *parent = 0);
     ~Window();
 
+//    protected:
+//     void paintEvent(QPaintEvent* event);
+//     void mouseReleaseEvent(QMouseEvent * event);
+//     void mouseMoveEvent(QMouseEvent *event);
+//     QPoint last;
+//     QList<QLine> lines;
+
    private:
-    Ui::Window *ui;
+    DrawArea *drawArea;
+    // Ui::Window *ui;
 };
 
 #endif  // WINDOW_H

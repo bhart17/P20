@@ -1,8 +1,8 @@
 #include <pthread.h>
-// #include <wiringPi.h>
 
 #include <QApplication>
 #include <QDebug>
+// #include <wiringPi.h>
 
 #include "window.h"
 
@@ -19,19 +19,17 @@ int main(int argc, char* argv[]) {
     // setup GPIO interface - uncomment when needed
     // needs to run with root via sudo in terminal.
     // wiringPiSetup();
-    // pinMode(0, OUTPUT);
+    // pinMode (0, OUTPUT);
 
     // setup Qt GUI
     QApplication a(argc, argv);
     Window w;
-    // Window w2;
     w.show();
-    // w2.show();
 
     // starting worker thread(s)
-    // int rc;
+    int rc;
     pthread_t worker_thread;
-    int rc = pthread_create(&worker_thread, NULL, worker, (void*)1);
+    rc = pthread_create(&worker_thread, NULL, worker, (void*)1);
     if (rc) {
         qDebug() << "Unable to start worker thread.";
         exit(1);
