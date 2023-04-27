@@ -2,10 +2,10 @@
 #define WINDOW_H
 
 #include <QMainWindow>
-#include <QMouseEvent>
-#include <QPainter>
 #include <QMenu>
 #include <QMenuBar>
+#include <QMouseEvent>
+#include <QPainter>
 
 #include "drawArea.h"
 
@@ -15,10 +15,7 @@ class Window : public QMainWindow {
    public:
     explicit Window(QWidget *parent = 0);
     ~Window();
-
-   protected:
     DrawArea *drawArea;
-
 };
 
 #endif  // WINDOW_H

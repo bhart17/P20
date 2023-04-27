@@ -11,6 +11,11 @@ class DrawAreaSend : public DrawArea {
    public:
     DrawAreaSend(QWidget *parent = nullptr);
 
+   signals:
+    void startLineSig(QPointF start);
+    void continueLineSig(QPointF next);
+    // void clearScreenSig();
+
    protected:
     void mousePressEvent(QMouseEvent *event);
     // void mouseReleaseEvent(QMouseEvent *event);
@@ -18,4 +23,3 @@ class DrawAreaSend : public DrawArea {
 };
 
 #endif  // DRAWAREASEND_H
-//hi bob

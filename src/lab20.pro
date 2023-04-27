@@ -12,20 +12,18 @@ TARGET = lab20
 TEMPLATE = app
 
 
-SOURCES += main.cpp\
-        window.cpp\
+SOURCES += main.cpp \
+        window.cpp \
         drawArea.cpp \
         sendWindow.cpp \
         receiveWindow.cpp \
         drawAreaSend.cpp
 
-HEADERS  += window.h\
+HEADERS  += window.h \
         drawArea.h \
         sendWindow.h \
         receiveWindow.h \
         drawAreaSend.h
-
-#FORMS    += window.ui
 
 #LIBS += -L/usr/local/lib -lwiringPi -lpthread
 LIBS += -L/usr/local/lib -lpthread

@@ -9,12 +9,12 @@ class SendWindow : public Window {
 
    public:
     explicit SendWindow(QWidget *parent = 0);
+    QAction *clearScreen;
 
    private:
     void createMenus();
     void createActions();
     QMenu *optionMenu;
-    QAction *clearScreen;
 };
 
 #endif  // SENDWINDOW_H
