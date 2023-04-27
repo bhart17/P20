@@ -13,11 +13,13 @@ class DrawArea : public QWidget {
 
    public slots:
     void clearScreen();
+    void startLine(QPointF start);
+    void continueLine(QPointF next);
 
    protected:
     void paintEvent(QPaintEvent *event);
-    void startLine(QPointF start);
-    void continueLine(QPointF next);
+    // void startLine(QPointF start);
+    // void continueLine(QPointF next);
     QPoint last;
     QList<QList<QLine>> lines;
 };
