@@ -56,8 +56,8 @@ int main(int argc, char* argv[]) {
     int ret = a.exec();
     qDebug() << "Event loop stopped.";
 
-    // cleanup pthreads
-    pthread_exit(NULL);
+    // cleanup pthreads <- what does this mean? this exits the main thread (surely not intended)
+    // pthread_exit(NULL);
 
     // exit
     return ret;

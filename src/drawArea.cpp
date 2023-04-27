@@ -2,11 +2,14 @@
 
 DrawArea::DrawArea(QWidget* parent) : QWidget(parent) {
     setAttribute(Qt::WA_StaticContents);
+    setAutoFillBackground(true);
+    setPalette(QPalette{Qt::white});
 }
 
 void DrawArea::paintEvent(QPaintEvent* event) {
     QPainter painter(this);
-    QPen pen(Qt::black, 3);
+    painter.setRenderHint(QPainter::Antialiasing);
+    QPen pen(Qt::black, 3, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin);
     painter.setPen(pen);
     for (QList<QList<QLine>>::const_iterator line = lines.begin();
          line != lines.end(); ++line) {
