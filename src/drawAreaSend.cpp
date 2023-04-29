@@ -4,13 +4,13 @@ DrawAreaSend::DrawAreaSend(QWidget* parent) : DrawArea(parent){
 };
 
 void DrawAreaSend::mousePressEvent(QMouseEvent* event) {
-    emit startLineSig(event->position());
-    startLine(event->position());
+    emit startLineSig(event->pos());
+    startLine(event->pos());
 }
 
 void DrawAreaSend::mouseMoveEvent(QMouseEvent* event) {
-    emit continueLineSig(event->position());
-    continueLine(event->position());
+    emit continueLineSig(event->pos());
+    continueLine(event->pos());
 }
 
 // void DrawAreaSend::mouseReleaseEvent(QMouseEvent* event) {

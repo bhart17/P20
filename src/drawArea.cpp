@@ -13,7 +13,7 @@ void DrawArea::paintEvent(QPaintEvent* event) {
     painter.setPen(pen);
     for (QList<QList<QLine>>::const_iterator line = lines.begin();
          line != lines.end(); ++line) {
-        painter.drawLines(*line);
+        painter.drawLines((*line).toVector());
     }
     event->accept();
 }
