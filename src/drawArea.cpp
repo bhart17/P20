@@ -24,15 +24,15 @@ void DrawArea::clearScreen() {
     update();
 }
 
-void DrawArea::startLine(QPointF start) {
+void DrawArea::startLine(QPoint start) {
     lines.append(QList<QLine>{});
-    last = start.toPoint();
+    last = start;
 }
 
-void DrawArea::continueLine(QPointF next) {
+void DrawArea::continueLine(QPoint next) {
     if ((next - last).manhattanLength() > 10) {
-        lines.last().append(QLine{last, next.toPoint()});
-        last = next.toPoint();
+        lines.last().append(QLine{last, next});
+        last = next;
         update();
     }
 }

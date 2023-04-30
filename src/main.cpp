@@ -33,10 +33,10 @@ int main(int argc, char* argv[]) {
     //                  receive.drawArea, &DrawArea::startLine);
     // QObject::connect(send.drawArea, &DrawArea::continueLineSig,
     //                  receive.drawArea, &DrawArea::continueLine);
-    QObject::connect(send.drawArea, SIGNAL(startLineSig(QPointF)),
-                     receive.drawArea, SLOT(startLine(QPointF)));
-    QObject::connect(send.drawArea, SIGNAL(continueLineSig(QPointF)),
-                     receive.drawArea, SLOT(continueLine(QPointF)));
+    QObject::connect(send.drawArea, SIGNAL(startLineSig(QPoint)),
+                     receive.drawArea, SLOT(startLine(QPoint)));
+    QObject::connect(send.drawArea, SIGNAL(continueLineSig(QPoint)),
+                     receive.drawArea, SLOT(continueLine(QPoint)));
     QObject::connect(send.clearScreen, SIGNAL(triggered()), receive.drawArea,
                      SLOT(clearScreen()));
 

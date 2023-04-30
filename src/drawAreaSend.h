@@ -12,8 +12,8 @@ class DrawAreaSend : public DrawArea {
     DrawAreaSend(QWidget *parent = nullptr);
 
    signals:
-    void startLineSig(QPointF start);
-    void continueLineSig(QPointF next);
+    void startLineSig(QPoint start);
+    void continueLineSig(QPoint next);
     // void clearScreenSig();
 
    protected:
