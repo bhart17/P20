@@ -17,13 +17,15 @@ SOURCES += main.cpp \
         drawArea.cpp \
         sendWindow.cpp \
         receiveWindow.cpp \
-        drawAreaSend.cpp
+        drawAreaSend.cpp \
+        threads.cpp \
 
 HEADERS  += window.h \
         drawArea.h \
         sendWindow.h \
         receiveWindow.h \
-        drawAreaSend.h
+        drawAreaSend.h \
+        threads.h \
 
 #LIBS += -L/usr/local/lib -lwiringPi -lpthread
 LIBS += -L/usr/local/lib -lpthread
