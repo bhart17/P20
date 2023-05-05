@@ -18,14 +18,16 @@ SOURCES += main.cpp \
         sendWindow.cpp \
         receiveWindow.cpp \
         drawAreaSend.cpp \
-        serial.cpp
+        serial.cpp \
+        threads.cpp
 
 HEADERS  += window.h \
         drawArea.h \
         sendWindow.h \
         receiveWindow.h \
         drawAreaSend.h \
-        serial.h
+        serial.h \
+        threads.h
 
 #LIBS += -L/usr/local/lib -lwiringPi -lpthread
 LIBS += -L/usr/local/lib -lpthread

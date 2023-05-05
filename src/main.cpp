@@ -4,10 +4,12 @@
 #include <QApplication>
 #include <QDebug>
 #include <QObject>
+#include <QThread>
 
 #include "receiveWindow.h"
 #include "sendWindow.h"
 #include "serial.h"
+#include "threads.h"
 
 void* worker(void* thread_id) {
     long tid = (long)thread_id;
@@ -30,6 +32,43 @@ int main(int argc, char* argv[]) {
     ReceiveWindow receive;
 
     Serial serial;
+    // also my thread code vv
+    QThread::currentThread()->setObjectName("Main Thread");
+    qDebug() << "Starting" << QThread::currentThread();
+
+    // To start the receiver thread:
+    ReceiveThread* recThread = new ReceiveThread();
+    QThread threadR;
+    threadR.setObjectName("Receive Thread :)");
+    recThread->moveToThread(&threadR);
+    QObject::connect(
+        &threadR, &QThread::started, recThread,
+        &ReceiveThread::testRun);  // when the thread is started, recThread
+                                   // calls the run function from the
+                                   // ReceiveThread class
+    threadR.start();
+
+    // To start the sender thread:
+    SendThread* sendThread = new SendThread();
+    QThread threadS;
+    threadS.setObjectName("Send Thread :)");
+    sendThread->moveToThread(&threadS);
+    QObject::connect(
+        &threadS, &QThread::started, sendThread,
+        &SendThread::testRun);  // when the thread is started, recThread calls
+                                // the run function from the ReceiveThread class
+    threadS.start();
+
+    // for troubleshooting and testing purposes on main thread:
+    qDebug() << "Doing prep work" << QThread::currentThread();
+    for (int i = 0; i < 10; i++) {
+        qDebug() << "Working Hard" << QString::number(i)
+                 << QThread::currentThread();
+        QThread::currentThread()->msleep(500);
+    }
+    qDebug() << "Finished at 1am" << QThread::currentThread();
+
+    // my thread code segment ends here ˆˆ
 
     // not sure which syntax is best
     // QObject::connect(send.drawArea, &DrawArea::startLineSig,
@@ -72,6 +111,16 @@ int main(int argc, char* argv[]) {
     qDebug() << "Starting event loop...";
     int ret = a.exec();
     qDebug() << "Event loop stopped.";
+
+    threadR.quit();
+    threadS.exit();
+    //    thread.exit();            useless because the thread is apparently
+    //    immortal
+    qDebug() << QThread::currentThread()->isRunning();
+    qDebug() << threadR.isRunning();
+    qDebug() << threadS.isRunning();
+
+    // my thread code here:
 
     // cleanup pthreads <- what does this mean? this exits the main thread
     // (surely not intended) pthread_exit(NULL);
