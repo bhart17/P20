@@ -7,10 +7,11 @@
 
 #include "receiveWindow.h"
 #include "sendWindow.h"
+#include "serial.h"
 
 void* worker(void* thread_id) {
     long tid = (long)thread_id;
-    // do something....
+    // do something...
     qDebug() << "Worker thread " << tid << "started.";
 
     // end thread
@@ -28,17 +29,33 @@ int main(int argc, char* argv[]) {
     SendWindow send;
     ReceiveWindow receive;
 
+    Serial serial;
+
     // not sure which syntax is best
     // QObject::connect(send.drawArea, &DrawArea::startLineSig,
     //                  receive.drawArea, &DrawArea::startLine);
     // QObject::connect(send.drawArea, &DrawArea::continueLineSig,
     //                  receive.drawArea, &DrawArea::continueLine);
-    QObject::connect(send.drawArea, SIGNAL(startLineSig(QPointF)),
-                     receive.drawArea, SLOT(startLine(QPointF)));
-    QObject::connect(send.drawArea, SIGNAL(continueLineSig(QPointF)),
-                     receive.drawArea, SLOT(continueLine(QPointF)));
-    QObject::connect(send.clearScreen, SIGNAL(triggered()), receive.drawArea,
-                     SLOT(clearScreen()));
+    // QObject::connect(send.drawArea, SIGNAL(startLineSig(QPointF)),
+    //                  receive.drawArea, SLOT(startLine(QPointF)));
+    // QObject::connect(send.drawArea, SIGNAL(continueLineSig(QPointF)),
+    //                  receive.drawArea, SLOT(continueLine(QPointF)));
+    // QObject::connect(send.clearScreen, SIGNAL(triggered()), receive.drawArea,
+    //                  SLOT(clearScreen()));
+
+    QObject::connect(send.drawArea, SIGNAL(startLineSig(QPointF)), &serial,
+                     SLOT(sendStartLine(QPointF)));
+    QObject::connect(send.drawArea, SIGNAL(continueLineSig(QPointF)), &serial,
+                     SLOT(sendContinueLine(QPointF)));
+    QObject::connect(send.clearScreen, &QAction::triggered, &serial,
+                     &Serial::sendClearScreen);
+
+    QObject::connect(&serial, &Serial::startLineSig, receive.drawArea,
+                     &DrawArea::startLine);
+    QObject::connect(&serial, &Serial::continueLineSig, receive.drawArea,
+                     &DrawArea::continueLine);
+    QObject::connect(&serial, &Serial::clearScreenSig, receive.drawArea,
+                     &DrawArea::clearScreen);
 
     send.show();
     receive.show();
@@ -56,8 +73,8 @@ int main(int argc, char* argv[]) {
     int ret = a.exec();
     qDebug() << "Event loop stopped.";
 
-    // cleanup pthreads <- what does this mean? this exits the main thread (surely not intended)
-    // pthread_exit(NULL);
+    // cleanup pthreads <- what does this mean? this exits the main thread
+    // (surely not intended) pthread_exit(NULL);
 
     // exit
     return ret;
