@@ -1,36 +1,36 @@
 #ifndef THREADS_H
 #define THREADS_H
 
+#include <QDebug>
 #include <QObject>
 #include <QThread>
-#include <QDebug>
 
-class ReceiveThread : public QObject
-{
-public:
+class ReceiveThread : public QObject {
+    Q_OBJECT
+
+   public:
     explicit ReceiveThread(QObject *parent = nullptr);
     ~ReceiveThread();
 
-    signals:
+   signals:
 
-    public slots:
+   public slots:
     void run();
     void testRun();
 };
 
-class SendThread : public QObject
-{
-public:
+class SendThread : public QObject {
+    Q_OBJECT
+
+   public:
     explicit SendThread(QObject *parent = nullptr);
     ~SendThread();
 
-    signals:
+   signals:
 
-    public slots:
+   public slots:
     void run();
     void testRun();
 };
-
-
 
 #endif
