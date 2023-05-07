@@ -9,16 +9,18 @@
 #include "receiveWindow.h"
 #include "sendWindow.h"
 #include "serial.h"
-#include "threads.h"
+// #include "thread.h"
+#include "sendThread.h"
+#include "receiveThread.h"
 
-void* worker(void* thread_id) {
-    long tid = (long)thread_id;
-    // do something...
-    qDebug() << "Worker thread " << tid << "started.";
-
-    // end thread
-    pthread_exit(NULL);
-}
+// void* worker(void* thread_id) {
+//     long tid = (long)thread_id;
+//     // do something...
+//     qDebug() << "Worker thread " << tid << "started.";
+//
+//     // end thread
+//     pthread_exit(NULL);
+// }
 
 int main(int argc, char* argv[]) {
     // setup GPIO interface - uncomment when needed
@@ -70,18 +72,6 @@ int main(int argc, char* argv[]) {
 
     // my thread code segment ends here ˆˆ
 
-    // not sure which syntax is best
-    // QObject::connect(send.drawArea, &DrawArea::startLineSig,
-    //                  receive.drawArea, &DrawArea::startLine);
-    // QObject::connect(send.drawArea, &DrawArea::continueLineSig,
-    //                  receive.drawArea, &DrawArea::continueLine);
-    // QObject::connect(send.drawArea, SIGNAL(startLineSig(QPointF)),
-    //                  receive.drawArea, SLOT(startLine(QPointF)));
-    // QObject::connect(send.drawArea, SIGNAL(continueLineSig(QPointF)),
-    //                  receive.drawArea, SLOT(continueLine(QPointF)));
-    // QObject::connect(send.clearScreen, SIGNAL(triggered()), receive.drawArea,
-    //                  SLOT(clearScreen()));
-
     QObject::connect(send.drawArea, SIGNAL(startLineSig(QPointF)), &serial,
                      SLOT(sendStartLine(QPointF)));
     QObject::connect(send.drawArea, SIGNAL(continueLineSig(QPointF)), &serial,
@@ -100,12 +90,12 @@ int main(int argc, char* argv[]) {
     receive.show();
 
     // starting worker thread(s)
-    pthread_t worker_thread;
-    int rc = pthread_create(&worker_thread, NULL, worker, (void*)1);
-    if (rc) {
-        qDebug() << "Unable to start worker thread.";
-        exit(1);
-    }
+    // pthread_t worker_thread;
+    // int rc = pthread_create(&worker_thread, NULL, worker, (void*)1);
+    // if (rc) {
+    //     qDebug() << "Unable to start worker thread.";
+    //     exit(1);
+    // }
 
     // start window event loop
     qDebug() << "Starting event loop...";

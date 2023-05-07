@@ -19,7 +19,9 @@ SOURCES += main.cpp \
         receiveWindow.cpp \
         drawAreaSend.cpp \
         serial.cpp \
-        threads.cpp
+        thread.cpp \
+        sendThread.cpp \
+        receiveThread.cpp
 
 HEADERS  += window.h \
         drawArea.h \
@@ -27,7 +29,9 @@ HEADERS  += window.h \
         receiveWindow.h \
         drawAreaSend.h \
         serial.h \
-        threads.h
+        thread.h \
+        sendThread.h \
+        receiveThread.h
 
 #LIBS += -L/usr/local/lib -lwiringPi -lpthread
 LIBS += -L/usr/local/lib -lpthread
