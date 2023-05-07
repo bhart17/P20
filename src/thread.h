@@ -4,6 +4,10 @@
 #include <QDebug>
 #include <QObject>
 #include <QThread>
+#include <QPointF>
+#include <algorithm>
+
+enum type { START, CONTINUE, CLEAR };
 
 class Thread : public QObject {
     Q_OBJECT
