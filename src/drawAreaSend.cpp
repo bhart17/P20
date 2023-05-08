@@ -1,7 +1,6 @@
 #include "drawAreaSend.h"
 
-DrawAreaSend::DrawAreaSend(QWidget* parent) : DrawArea(parent){
-};
+DrawAreaSend::DrawAreaSend(QWidget* parent) : DrawArea(parent){};
 
 void DrawAreaSend::mousePressEvent(QMouseEvent* event) {
     emit startLineSig(event->pos());
@@ -9,8 +8,10 @@ void DrawAreaSend::mousePressEvent(QMouseEvent* event) {
 }
 
 void DrawAreaSend::mouseMoveEvent(QMouseEvent* event) {
-    emit continueLineSig(event->pos());
-    continueLine(event->pos());
+    if ((event->pos() - last).manhattanLength() > 25) {
+        emit continueLineSig(event->pos());
+        continueLine(event->pos());
+    }
 }
 
 // void DrawAreaSend::mouseReleaseEvent(QMouseEvent* event) {

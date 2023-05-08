@@ -19,8 +19,9 @@ void ReceiveThread::receive() {
     // QThread::currentThread()->msleep(1);
     for (int i = 0; i < 22; ++i) {
         data = (digitalRead(REC_DATA) << i) | data;
-        // qDebug() << "Received: " << Thread::clock << (int)Thread::pin;
         bool lastClock = digitalRead(REC_CLOCK);
+        qDebug() << "Received: " << lastClock << digitalRead(REC_DATA);
+        // auto prevMillis = micros();
         while (digitalRead(REC_CLOCK) == lastClock && i < 21) {
             auto prevMillis = micros();
             while (true) {
@@ -35,7 +36,7 @@ void ReceiveThread::receive() {
         // QThread::currentThread()->msleep(1);
     }
     // QThread::currentThread()->msleep(1);
-    // qDebug() << "Received: " << QString::number(data, 2);
+    qDebug() << "Received: " << QString::number(data, 2);
     // Thread::mutex.unlock();mamak
     deserialise(data);
 }

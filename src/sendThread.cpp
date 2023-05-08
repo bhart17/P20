@@ -25,11 +25,11 @@ void SendThread::send(unsigned int data) {
         digitalWrite(SEND_DATA, (data >> i) & 1);
         clock = !clock;
         digitalWrite(SEND_CLOCK, clock);
-        // qDebug() << "Sent: " << Thread::clock << (int)Thread::pin;
+        // qDebug() << "Sent: " << clock << ((data >> i) & 1);
         auto prevMillis = millis();
         while (true) {
             auto currentMillis = millis();
-            if (currentMillis - prevMillis > 2) {
+            if (currentMillis - prevMillis > 3) {
                 break;
             }
         }
@@ -43,7 +43,7 @@ void SendThread::send(unsigned int data) {
     // qDebug() << "Sent: " << Thread::clock << (int)Thread::pin;
     // Thread::pin = false;
     // QThread::currentThread()->msleep(1);
-    // qDebug() << "Sent:     " << QString::number(data, 2);
+    qDebug() << "Sent:     " << QString::number(data, 2);
     // Thread::mutex.unlock();
 }
 
