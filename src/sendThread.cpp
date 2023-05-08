@@ -25,8 +25,16 @@ void SendThread::send(unsigned int data) {
         digitalWrite(SEND_DATA, (data >> i) & 1);
         clock = !clock;
         digitalWrite(SEND_CLOCK, clock);
-        //qDebug() << "Sent: " << Thread::clock << (int)Thread::pin;
-        delayMicroseconds(2000);
+        // qDebug() << "Sent: " << Thread::clock << (int)Thread::pin;
+        auto prevMillis = 0;
+        while (true) {
+            auto currentMillis = millis();
+            if (currentMillis - prevMillis > 2) {
+                prevMillis = currentMillis;
+            } else {
+                break;
+            }
+        }
         // QThread::currentThread()->msleep(2);
     }
     // Thread::clock = !Thread::clock;
