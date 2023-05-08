@@ -41,8 +41,8 @@ int main(int argc, char* argv[]) {
                                             // from the ReceiveThread class
     // QObject::connect(&threadR, &QThread::finished, recThread,
     //                  &QObject::deleteLater);
-    QObject::connect(&receive, &Window::closed, recThread,
-                     &QObject::deleteLater);
+    // QObject::connect(&receive, &Window::closed, recThread,
+    //                  &QObject::deleteLater);
     threadR.start();
 
     // To start the sender thread:
@@ -56,7 +56,7 @@ int main(int argc, char* argv[]) {
     // // the run function from the ReceiveThread class
     // QObject::connect(&threadS, &QThread::finished, sendThread,
     //                  &QObject::deleteLater);
-    QObject::connect(&send, &Window::closed, sendThread, &QObject::deleteLater);
+    // QObject::connect(&send, &Window::closed, sendThread, &QObject::deleteLater);
     threadS.start();
 
     // for troubleshooting and testing purposes on main thread:
@@ -95,11 +95,16 @@ int main(int argc, char* argv[]) {
     int ret = a.exec();
     qDebug() << "Event loop stopped.";
 
+    recThread->finished = true;
+    sendThread->deleteLater();
     threadR.quit();
     threadS.quit();
-    qDebug() << QThread::currentThread()->isRunning();
-    qDebug() << threadR.isRunning();
-    qDebug() << threadS.isRunning();
+    threadR.wait();
+    threadS.wait();
+
+    // qDebug() << QThread::currentThread()->isRunning();
+    // qDebug() << threadR.isRunning();
+    // qDebug() << threadS.isRunning();
 
     return ret;
 }

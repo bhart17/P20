@@ -2,11 +2,15 @@
 #define RECEIVETHREAD_H
 
 #include <QCoreApplication>
+#include <atomic>
 
 #include "thread.h"
 
 class ReceiveThread : public Thread {
     Q_OBJECT
+
+   public:
+    std::atomic<bool> finished = false;
 
    public slots:
     void testRun();

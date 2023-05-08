@@ -38,11 +38,12 @@ void ReceiveThread::deserialise(unsigned int data) {
 }
 
 void ReceiveThread::run() {
-    while (true) {
+    while (!finished) {
         QCoreApplication::processEvents();
         if (!Thread::queue.isEmpty()) {
             receive(Thread::queue.dequeue());
         }
         QThread::currentThread()->usleep(500);
     }
+    deleteLater();
 }
