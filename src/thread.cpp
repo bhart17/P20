@@ -8,4 +8,4 @@ Thread::~Thread() {
     qDebug() << this << "Thread Ended" << QThread::currentThread();
 }
 
-void Thread::run() { this->deleteLater(); }
+// void Thread::run() { this->deleteLater(); }

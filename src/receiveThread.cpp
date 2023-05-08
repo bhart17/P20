@@ -36,3 +36,13 @@ void ReceiveThread::deserialise(unsigned int data) {
             break;
     }
 }
+
+void ReceiveThread::run() {
+    while (true) {
+        QCoreApplication::processEvents();
+        if (!Thread::queue.isEmpty()) {
+            receive(Thread::queue.dequeue());
+        }
+        QThread::currentThread()->usleep(500);
+    }
+}

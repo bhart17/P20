@@ -21,8 +21,10 @@ int main(int argc, char* argv[]) {
     SendWindow send;
     ReceiveWindow receive;
 
-    QObject::connect(&send, &Window::closed, &a, &QApplication::closeAllWindows);
-    QObject::connect(&receive, &Window::closed, &a, &QApplication::closeAllWindows);
+    QObject::connect(&send, &Window::closed, &a,
+                     &QApplication::closeAllWindows);
+    QObject::connect(&receive, &Window::closed, &a,
+                     &QApplication::closeAllWindows);
 
     // also my thread code vv
     QThread::currentThread()->setObjectName("Main Thread");
@@ -38,7 +40,9 @@ int main(int argc, char* argv[]) {
     //     &ReceiveThread::testRun);  // when the thread is started, recThread
     //                                // calls the run function from the
     //                                // ReceiveThread class
-    QObject::connect(&threadR, &QThread::finished, recThread,
+    // QObject::connect(&threadR, &QThread::finished, recThread,
+    //                  &QObject::deleteLater);
+    QObject::connect(&receive, &Window::closed, recThread,
                      &QObject::deleteLater);
     threadR.start();
 
@@ -49,12 +53,11 @@ int main(int argc, char* argv[]) {
     sendThread->moveToThread(&threadS);
     // QObject::connect(
     //     &threadS, &QThread::started, sendThread,
-    //     &SendThread::testRun);  // when the thread is started, recThread
-    //     calls
-    //                             // the run function from the ReceiveThread
-    //                             class
-    QObject::connect(&threadS, &QThread::finished, sendThread,
-                     &QObject::deleteLater);
+    //     &SendThread::run);  // when the thread is started, recThread calls
+    // // the run function from the ReceiveThread class
+    // QObject::connect(&threadS, &QThread::finished, sendThread,
+    //                  &QObject::deleteLater);
+    QObject::connect(&send, &Window::closed, sendThread, &QObject::deleteLater);
     threadS.start();
 
     // for troubleshooting and testing purposes on main thread:

@@ -33,6 +33,20 @@ unsigned int SendThread::serialise(type type) {
     return type;
 }
 
-void SendThread::sendStartLine(QPointF start) { emit send(serialise(START, start)); }
-void SendThread::sendContinueLine(QPointF next) { emit send(serialise(CONTINUE, next)); }
-void SendThread::sendClearScreen() { emit send(serialise(CLEAR)); }
+void SendThread::sendStartLine(QPointF start) {
+    Thread::queue.enqueue(serialise(START, start));
+}
+void SendThread::sendContinueLine(QPointF next) {
+    Thread::queue.enqueue(serialise(CONTINUE, next));
+}
+void SendThread::sendClearScreen() { Thread::queue.enqueue(serialise(CLEAR)); }
+
+// void SendThread::run() {
+//     while (true) {
+//         QCoreApplication::processEvents();
+//         if (!queue.isEmpty()) {
+//             emit send(queue.dequeue());
+//         }
+//         QThread::currentThread()->usleep(500);
+//     }
+// }

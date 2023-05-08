@@ -1,6 +1,8 @@
 #ifndef RECEIVETHREAD_H
 #define RECEIVETHREAD_H
 
+#include <QCoreApplication>
+
 #include "thread.h"
 
 class ReceiveThread : public Thread {
@@ -14,6 +16,7 @@ class ReceiveThread : public Thread {
     void startLineSig(QPointF start);
     void continueLineSig(QPointF next);
     void clearScreenSig();
+    void run();
 
    private:
     // void receive(unsigned int data);
