@@ -16,7 +16,7 @@ class Thread : public QObject {
    public:
     explicit Thread(QObject *parent = nullptr);
     ~Thread();
-    static QQueue<unsigned int> queue;
+    inline static QQueue<unsigned int> queue;
 
     //    public slots:
     //     void run();

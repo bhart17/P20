@@ -35,11 +35,10 @@ int main(int argc, char* argv[]) {
     QThread threadR;
     threadR.setObjectName("Receive Thread :)");
     recThread->moveToThread(&threadR);
-    // QObject::connect(
-    //     &threadR, &QThread::started, recThread,
-    //     &ReceiveThread::testRun);  // when the thread is started, recThread
-    //                                // calls the run function from the
-    //                                // ReceiveThread class
+    QObject::connect(&threadR, &QThread::started, recThread,
+                     &ReceiveThread::run);  // when the thread is started,
+                                            // recThread calls the run function
+                                            // from the ReceiveThread class
     // QObject::connect(&threadR, &QThread::finished, recThread,
     //                  &QObject::deleteLater);
     QObject::connect(&receive, &Window::closed, recThread,

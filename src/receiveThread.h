@@ -10,13 +10,13 @@ class ReceiveThread : public Thread {
 
    public slots:
     void testRun();
+    void run();
     void receive(unsigned int data);
 
    signals:
     void startLineSig(QPointF start);
     void continueLineSig(QPointF next);
     void clearScreenSig();
-    void run();
 
    private:
     // void receive(unsigned int data);
