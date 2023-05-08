@@ -5,10 +5,10 @@
 #include <QObject>
 #include <QThread>
 
-#include "receiveWindow.h"
-#include "sendWindow.h"
 #include "receiveThread.h"
+#include "receiveWindow.h"
 #include "sendThread.h"
+#include "sendWindow.h"
 
 int main(int argc, char* argv[]) {
     // setup GPIO interface - uncomment when needed
@@ -35,6 +35,8 @@ int main(int argc, char* argv[]) {
     //     &ReceiveThread::testRun);  // when the thread is started, recThread
     //                                // calls the run function from the
     //                                // ReceiveThread class
+    QObject::connect(&threadR, &QThread::finished, recThread,
+                     &QObject::deleteLater);
     threadR.start();
 
     // To start the sender thread:
@@ -48,6 +50,8 @@ int main(int argc, char* argv[]) {
     //     calls
     //                             // the run function from the ReceiveThread
     //                             class
+    QObject::connect(&threadS, &QThread::finished, sendThread,
+                     &QObject::deleteLater);
     threadS.start();
 
     // for troubleshooting and testing purposes on main thread:
