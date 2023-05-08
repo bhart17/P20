@@ -26,7 +26,8 @@ void SendThread::send(unsigned int data) {
         clock = !clock;
         digitalWrite(SEND_CLOCK, clock);
         //qDebug() << "Sent: " << Thread::clock << (int)Thread::pin;
-        QThread::currentThread()->msleep(10);
+        delayMicroseconds(2000);
+        // QThread::currentThread()->msleep(2);
     }
     // Thread::clock = !Thread::clock;
     // qDebug() << "Sent: " << Thread::clock << (int)Thread::pin;
@@ -69,7 +70,8 @@ void SendThread::run() {
             send(queue.dequeue());
             // emit send(queue.dequeue());
         } else {
-            QThread::currentThread()->usleep(250);
+            delayMicroseconds(250);
+            // QThread::currentThread()->usleep(250);
         }
     }
     deleteLater();
