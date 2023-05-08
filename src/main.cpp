@@ -50,13 +50,14 @@ int main(int argc, char* argv[]) {
     QThread threadS;
     threadS.setObjectName("Send Thread :)");
     sendThread->moveToThread(&threadS);
-    // QObject::connect(
-    //     &threadS, &QThread::started, sendThread,
-    //     &SendThread::run);  // when the thread is started, recThread calls
-    // // the run function from the ReceiveThread class
+    QObject::connect(
+        &threadS, &QThread::started, sendThread,
+        &SendThread::run);  // when the thread is started, recThread calls
+    // the run function from the ReceiveThread class
     // QObject::connect(&threadS, &QThread::finished, sendThread,
     //                  &QObject::deleteLater);
-    // QObject::connect(&send, &Window::closed, sendThread, &QObject::deleteLater);
+    // QObject::connect(&send, &Window::closed, sendThread,
+    // &QObject::deleteLater);
     threadS.start();
 
     // for troubleshooting and testing purposes on main thread:
@@ -93,7 +94,7 @@ int main(int argc, char* argv[]) {
     qDebug() << "Event loop stopped.";
 
     recThread->finished = true;
-    sendThread->deleteLater();
+    sendThread->finished = true;
     threadR.quit();
     threadS.quit();
     threadR.wait();

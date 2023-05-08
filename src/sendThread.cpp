@@ -13,10 +13,28 @@ void SendThread::testRun() {
                           // ReceiveThread()" in main.cpp
 }
 
-// void SendThread::send(unsigned int data) {
-//     // real send code here
-//     // receive(data);
-// }
+void SendThread::send(unsigned int data) {
+    // Thread::mutex.lock();
+    // Thread::pin = true;
+    // Thread::clock = true;
+    // qDebug() << "Sent: " << Thread::clock << (int)Thread::pin;
+    // QThread::currentThread()->msleep(1);
+    for (int i = 0; i < 22; ++i) {
+        Thread::pin = (data >> i) & 1;
+        Thread::clock = !Thread::clock;
+        qDebug() << "Sent: " << Thread::clock << (int)Thread::pin;
+        QThread::currentThread()->msleep(1);
+    }
+    // Thread::clock = !Thread::clock;
+    // qDebug() << "Sent: " << Thread::clock << (int)Thread::pin;
+    // QThread::currentThread()->msleep(1);
+    // Thread::clock = false;
+    // qDebug() << "Sent: " << Thread::clock << (int)Thread::pin;
+    // Thread::pin = false;
+    // QThread::currentThread()->msleep(1);
+    qDebug() << "Sent:     " << QString::number(data, 2);
+    // Thread::mutex.unlock();
+}
 
 unsigned int SendThread::serialise(type type, QPointF data) {
     // bits:
@@ -34,19 +52,22 @@ unsigned int SendThread::serialise(type type) {
 }
 
 void SendThread::sendStartLine(QPointF start) {
-    Thread::queue.enqueue(serialise(START, start));
+    queue.enqueue(serialise(START, start));
 }
 void SendThread::sendContinueLine(QPointF next) {
-    Thread::queue.enqueue(serialise(CONTINUE, next));
+    queue.enqueue(serialise(CONTINUE, next));
 }
-void SendThread::sendClearScreen() { Thread::queue.enqueue(serialise(CLEAR)); }
+void SendThread::sendClearScreen() { queue.enqueue(serialise(CLEAR)); }
 
-// void SendThread::run() {
-//     while (true) {
-//         QCoreApplication::processEvents();
-//         if (!queue.isEmpty()) {
-//             emit send(queue.dequeue());
-//         }
-//         QThread::currentThread()->usleep(500);
-//     }
-// }
+void SendThread::run() {
+    while (!finished) {
+        QCoreApplication::processEvents();
+        if (!queue.isEmpty()) {
+            send(queue.dequeue());
+            // emit send(queue.dequeue());
+        } else {
+            QThread::currentThread()->usleep(500);
+        }
+    }
+    deleteLater();
+}

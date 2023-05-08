@@ -15,7 +15,7 @@ class ReceiveThread : public Thread {
    public slots:
     void testRun();
     void run();
-    void receive(unsigned int data);
+    void receive();
 
    signals:
     void startLineSig(QPointF start);

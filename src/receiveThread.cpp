@@ -13,8 +13,22 @@ void ReceiveThread::testRun() {
                           // ReceiveThread()" in main.cpp
 }
 
-void ReceiveThread::receive(unsigned int data) {
-    // real recieve code here
+void ReceiveThread::receive() {
+    // Thread::mutex.lock();
+    unsigned int data = 0;
+    // QThread::currentThread()->msleep(1);
+    for (int i = 0; i < 22; ++i) {
+        data = (Thread::pin << i) | data;
+        qDebug() << "Received: " << Thread::clock << (int)Thread::pin;
+        bool lastClock = Thread::clock;
+        while (Thread::clock == lastClock && i < 21) {
+            QThread::currentThread()->usleep(100);
+        }
+        // QThread::currentThread()->msleep(1);
+    }
+    // QThread::currentThread()->msleep(1);
+    qDebug() << "Received: " << QString::number(data, 2);
+    // Thread::mutex.unlock();mamak
     deserialise(data);
 }
 
@@ -38,12 +52,15 @@ void ReceiveThread::deserialise(unsigned int data) {
 }
 
 void ReceiveThread::run() {
+    bool lastClock = Thread::clock;
     while (!finished) {
-        QCoreApplication::processEvents();
-        if (!Thread::queue.isEmpty()) {
-            receive(Thread::queue.dequeue());
+        // QCoreApplication::processEvents();
+        if (Thread::clock != lastClock) {
+            receive();
+        } else {
+            lastClock = Thread::clock;
+            QThread::currentThread()->usleep(100);
         }
-        QThread::currentThread()->usleep(500);
     }
     deleteLater();
 }
