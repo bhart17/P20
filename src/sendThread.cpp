@@ -20,10 +20,13 @@ void SendThread::send(unsigned int data) {
     // qDebug() << "Sent: " << Thread::clock << (int)Thread::pin;
     // QThread::currentThread()->msleep(1);
     for (int i = 0; i < 22; ++i) {
-        Thread::pin = (data >> i) & 1;
-        Thread::clock = !Thread::clock;
+        // Thread::pin = (data >> i) & 1;
+        // Thread::clock = !Thread::clock;
+        digitalWrite(SEND_DATA, (data >> i) & 1);
+        clock = !clock;
+        digitalWrite(SEND_CLOCK, clock);
         //qDebug() << "Sent: " << Thread::clock << (int)Thread::pin;
-        QThread::currentThread()->usleep(2500);
+        QThread::currentThread()->msleep(10);
     }
     // Thread::clock = !Thread::clock;
     // qDebug() << "Sent: " << Thread::clock << (int)Thread::pin;

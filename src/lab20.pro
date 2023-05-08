@@ -34,5 +34,5 @@ HEADERS  += window.h \
         sendThread.h \
         receiveThread.h
 
-#LIBS += -L/usr/local/lib -lwiringPi -lpthread
-LIBS += -L/usr/local/lib -lpthread
+LIBS += -L/usr/local/lib -lwiringPi
+#LIBS += -L/usr/local/lib -lpthread

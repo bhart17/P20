@@ -18,10 +18,10 @@ void ReceiveThread::receive() {
     unsigned int data = 0;
     // QThread::currentThread()->msleep(1);
     for (int i = 0; i < 22; ++i) {
-        data = (Thread::pin << i) | data;
-        //qDebug() << "Received: " << Thread::clock << (int)Thread::pin;
-        bool lastClock = Thread::clock;
-        while (Thread::clock == lastClock && i < 21) {
+        data = (digitalRead(REC_DATA) << i) | data;
+        // qDebug() << "Received: " << Thread::clock << (int)Thread::pin;
+        bool lastClock = digitalRead(REC_CLOCK);
+        while (digitalRead(REC_CLOCK) == lastClock && i < 21) {
             QThread::currentThread()->usleep(250);
         }
         // QThread::currentThread()->msleep(1);
@@ -52,13 +52,13 @@ void ReceiveThread::deserialise(unsigned int data) {
 }
 
 void ReceiveThread::run() {
-    bool lastClock = Thread::clock;
+    bool lastClock = digitalRead(REC_CLOCK);
     while (!finished) {
         // QCoreApplication::processEvents();
-        if (Thread::clock != lastClock) {
+        if (digitalRead(REC_CLOCK) != lastClock) {
             receive();
         } else {
-            lastClock = Thread::clock;
+            lastClock = digitalRead(REC_CLOCK);
             QThread::currentThread()->usleep(250);
         }
     }

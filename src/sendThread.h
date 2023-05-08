@@ -27,6 +27,7 @@ class SendThread : public Thread {
     unsigned int serialise(type type, QPoint data);
     unsigned int serialise(type type);
     QQueue<unsigned int> queue;
+    bool clock = false;
 };
 
 #endif  // SENDTHREAD_H
