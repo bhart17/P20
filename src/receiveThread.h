@@ -10,7 +10,7 @@ class ReceiveThread : public Thread {
     Q_OBJECT
 
    public:
-    std::atomic<bool> finished = false;
+    std::atomic<bool> finished{false};
 
    public slots:
     void testRun();
@@ -18,8 +18,8 @@ class ReceiveThread : public Thread {
     void receive();
 
    signals:
-    void startLineSig(QPointF start);
-    void continueLineSig(QPointF next);
+    void startLineSig(QPoint start);
+    void continueLineSig(QPoint next);
     void clearScreenSig();
 
    private:

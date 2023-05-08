@@ -4,7 +4,7 @@
 #include <QDebug>
 #include <QMutex>
 #include <QObject>
-#include <QPointF>
+#include <QPoint>
 #include <QQueue>
 #include <QThread>
 #include <algorithm>

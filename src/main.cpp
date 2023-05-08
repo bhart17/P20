@@ -71,10 +71,10 @@ int main(int argc, char* argv[]) {
 
     // my thread code segment ends here ˆˆ
 
-    QObject::connect(send.drawArea, SIGNAL(startLineSig(QPointF)), sendThread,
-                     SLOT(sendStartLine(QPointF)));
-    QObject::connect(send.drawArea, SIGNAL(continueLineSig(QPointF)),
-                     sendThread, SLOT(sendContinueLine(QPointF)));
+    QObject::connect(send.drawArea, SIGNAL(startLineSig(QPoint)), sendThread,
+                     SLOT(sendStartLine(QPoint)));
+    QObject::connect(send.drawArea, SIGNAL(continueLineSig(QPoint)),
+                     sendThread, SLOT(sendContinueLine(QPoint)));
     QObject::connect(send.clearScreen, &QAction::triggered, sendThread,
                      &SendThread::sendClearScreen);
 

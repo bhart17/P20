@@ -10,12 +10,12 @@ class SendThread : public Thread {
     Q_OBJECT
 
    public:
-    std::atomic<bool> finished = false;
+    std::atomic<bool> finished{false};
 
    public slots:
     void testRun();
-    void sendStartLine(QPointF start);
-    void sendContinueLine(QPointF next);
+    void sendStartLine(QPoint start);
+    void sendContinueLine(QPoint next);
     void sendClearScreen();
     void run();
 
@@ -24,7 +24,7 @@ class SendThread : public Thread {
 
    private:
     void send(unsigned int data);
-    unsigned int serialise(type type, QPointF data);
+    unsigned int serialise(type type, QPoint data);
     unsigned int serialise(type type);
     QQueue<unsigned int> queue;
 };

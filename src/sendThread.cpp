@@ -23,7 +23,7 @@ void SendThread::send(unsigned int data) {
         Thread::pin = (data >> i) & 1;
         Thread::clock = !Thread::clock;
         //qDebug() << "Sent: " << Thread::clock << (int)Thread::pin;
-        QThread::currentThread()->msleep(1);
+        QThread::currentThread()->usleep(2500);
     }
     // Thread::clock = !Thread::clock;
     // qDebug() << "Sent: " << Thread::clock << (int)Thread::pin;
@@ -32,11 +32,11 @@ void SendThread::send(unsigned int data) {
     // qDebug() << "Sent: " << Thread::clock << (int)Thread::pin;
     // Thread::pin = false;
     // QThread::currentThread()->msleep(1);
-    qDebug() << "Sent:     " << QString::number(data, 2);
+    // qDebug() << "Sent:     " << QString::number(data, 2);
     // Thread::mutex.unlock();
 }
 
-unsigned int SendThread::serialise(type type, QPointF data) {
+unsigned int SendThread::serialise(type type, QPoint data) {
     // bits:
     // 1-2: command (START, CONTINUE)
     // 3-12: y coord
@@ -51,10 +51,10 @@ unsigned int SendThread::serialise(type type) {
     return type;
 }
 
-void SendThread::sendStartLine(QPointF start) {
+void SendThread::sendStartLine(QPoint start) {
     queue.enqueue(serialise(START, start));
 }
-void SendThread::sendContinueLine(QPointF next) {
+void SendThread::sendContinueLine(QPoint next) {
     queue.enqueue(serialise(CONTINUE, next));
 }
 void SendThread::sendClearScreen() { queue.enqueue(serialise(CLEAR)); }
@@ -66,7 +66,7 @@ void SendThread::run() {
             send(queue.dequeue());
             // emit send(queue.dequeue());
         } else {
-            QThread::currentThread()->usleep(500);
+            QThread::currentThread()->usleep(250);
         }
     }
     deleteLater();

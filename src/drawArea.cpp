@@ -30,9 +30,11 @@ void DrawArea::startLine(QPoint start) {
 }
 
 void DrawArea::continueLine(QPoint next) {
-    if ((next - last).manhattanLength() > 10) {
-        lines.last().append(QLine{last, next});
-        last = next;
-        update();
+    if ((next - last).manhattanLength() > 25) {
+        if (!lines.isEmpty()) {
+            lines.last().append(QLine{last, next});
+            last = next;
+            update();
+        }
     }
 }

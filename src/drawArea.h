@@ -4,6 +4,7 @@
 #include <QMouseEvent>
 #include <QPainter>
 #include <QWidget>
+#include <QDebug>
 
 class DrawArea : public QWidget {
     Q_OBJECT

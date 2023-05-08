@@ -22,12 +22,12 @@ void ReceiveThread::receive() {
         //qDebug() << "Received: " << Thread::clock << (int)Thread::pin;
         bool lastClock = Thread::clock;
         while (Thread::clock == lastClock && i < 21) {
-            QThread::currentThread()->usleep(100);
+            QThread::currentThread()->usleep(250);
         }
         // QThread::currentThread()->msleep(1);
     }
     // QThread::currentThread()->msleep(1);
-    qDebug() << "Received: " << QString::number(data, 2);
+    // qDebug() << "Received: " << QString::number(data, 2);
     // Thread::mutex.unlock();mamak
     deserialise(data);
 }
@@ -36,17 +36,17 @@ void ReceiveThread::deserialise(unsigned int data) {
     switch (data & 3) {
         case START:
             emit startLineSig(
-                QPointF{(qreal)(data >> 12), (qreal)((data >> 2) & 1023)});
+                QPoint{(int)(data >> 12), (int)((data >> 2) & 1023)});
             break;
         case CONTINUE:
             emit continueLineSig(
-                QPointF{(qreal)(data >> 12), (qreal)((data >> 2) & 1023)});
+                QPoint{(int)(data >> 12), (int)((data >> 2) & 1023)});
             break;
         case CLEAR:
             emit clearScreenSig();
             break;
         default:
-            qDebug() << "fell through";
+            qDebug() << "fell through " << data;
             break;
     }
 }
@@ -59,7 +59,7 @@ void ReceiveThread::run() {
             receive();
         } else {
             lastClock = Thread::clock;
-            QThread::currentThread()->usleep(100);
+            QThread::currentThread()->usleep(250);
         }
     }
     deleteLater();
