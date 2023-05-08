@@ -21,6 +21,9 @@ int main(int argc, char* argv[]) {
     SendWindow send;
     ReceiveWindow receive;
 
+    QObject::connect(&send, &Window::closed, &a, &QApplication::closeAllWindows);
+    QObject::connect(&receive, &Window::closed, &a, &QApplication::closeAllWindows);
+
     // also my thread code vv
     QThread::currentThread()->setObjectName("Main Thread");
     qDebug() << "Starting" << QThread::currentThread();
