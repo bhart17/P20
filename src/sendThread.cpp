@@ -22,7 +22,7 @@ void SendThread::send(unsigned int data) {
     for (int i = 0; i < 22; ++i) {
         Thread::pin = (data >> i) & 1;
         Thread::clock = !Thread::clock;
-        qDebug() << "Sent: " << Thread::clock << (int)Thread::pin;
+        //qDebug() << "Sent: " << Thread::clock << (int)Thread::pin;
         QThread::currentThread()->msleep(1);
     }
     // Thread::clock = !Thread::clock;

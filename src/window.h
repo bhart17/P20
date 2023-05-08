@@ -17,6 +17,7 @@ class Window : public QMainWindow {
     ~Window();
     DrawArea *drawArea;
     void closeEvent(QCloseEvent *event);
+    void keyPressEvent(QKeyEvent *event);
 
    signals:
     void closed();

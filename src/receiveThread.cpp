@@ -19,7 +19,7 @@ void ReceiveThread::receive() {
     // QThread::currentThread()->msleep(1);
     for (int i = 0; i < 22; ++i) {
         data = (Thread::pin << i) | data;
-        qDebug() << "Received: " << Thread::clock << (int)Thread::pin;
+        //qDebug() << "Received: " << Thread::clock << (int)Thread::pin;
         bool lastClock = Thread::clock;
         while (Thread::clock == lastClock && i < 21) {
             QThread::currentThread()->usleep(100);
