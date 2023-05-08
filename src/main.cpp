@@ -1,21 +1,14 @@
-#include <pthread.h>
 // #include <wiringPi.h>
 
 #include <QApplication>
 #include <QDebug>
 #include <QObject>
+#include <QThread>
 
+#include "receiveThread.h"
 #include "receiveWindow.h"
+#include "sendThread.h"
 #include "sendWindow.h"
-
-void* worker(void* thread_id) {
-    long tid = (long)thread_id;
-    // do something....
-    qDebug() << "Worker thread " << tid << "started.";
-
-    // end thread
-    pthread_exit(NULL);
-}
 
 int main(int argc, char* argv[]) {
     // setup GPIO interface - uncomment when needed
@@ -28,37 +21,88 @@ int main(int argc, char* argv[]) {
     SendWindow send;
     ReceiveWindow receive;
 
-    // not sure which syntax is best
-    // QObject::connect(send.drawArea, &DrawArea::startLineSig,
-    //                  receive.drawArea, &DrawArea::startLine);
-    // QObject::connect(send.drawArea, &DrawArea::continueLineSig,
-    //                  receive.drawArea, &DrawArea::continueLine);
-    QObject::connect(send.drawArea, SIGNAL(startLineSig(QPoint)),
-                     receive.drawArea, SLOT(startLine(QPoint)));
-    QObject::connect(send.drawArea, SIGNAL(continueLineSig(QPoint)),
-                     receive.drawArea, SLOT(continueLine(QPoint)));
-    QObject::connect(send.clearScreen, SIGNAL(triggered()), receive.drawArea,
-                     SLOT(clearScreen()));
+    QObject::connect(&send, &Window::closed, &a,
+                     &QApplication::closeAllWindows);
+    QObject::connect(&receive, &Window::closed, &a,
+                     &QApplication::closeAllWindows);
+
+    // also my thread code vv
+    QThread::currentThread()->setObjectName("Main Thread");
+    qDebug() << "Starting" << QThread::currentThread();
+
+    // To start the receiver thread:
+    ReceiveThread* recThread = new ReceiveThread();
+    QThread threadR;
+    threadR.setObjectName("Receive Thread :)");
+    recThread->moveToThread(&threadR);
+    QObject::connect(&threadR, &QThread::started, recThread,
+                     &ReceiveThread::run);  // when the thread is started,
+                                            // recThread calls the run function
+                                            // from the ReceiveThread class
+    // QObject::connect(&threadR, &QThread::finished, recThread,
+    //                  &QObject::deleteLater);
+    // QObject::connect(&receive, &Window::closed, recThread,
+    //                  &QObject::deleteLater);
+    threadR.start();
+
+    // To start the sender thread:
+    SendThread* sendThread = new SendThread();
+    QThread threadS;
+    threadS.setObjectName("Send Thread :)");
+    sendThread->moveToThread(&threadS);
+    QObject::connect(
+        &threadS, &QThread::started, sendThread,
+        &SendThread::run);  // when the thread is started, recThread calls
+    // the run function from the ReceiveThread class
+    // QObject::connect(&threadS, &QThread::finished, sendThread,
+    //                  &QObject::deleteLater);
+    // QObject::connect(&send, &Window::closed, sendThread,
+    // &QObject::deleteLater);
+    threadS.start();
+
+    // for troubleshooting and testing purposes on main thread:
+    // qDebug() << "Doing prep work" << QThread::currentThread();
+    // for (int i = 0; i < 10; i++) {
+    //     qDebug() << "Working Hard" << QString::number(i)
+    //              << QThread::currentThread();
+    //     QThread::currentThread()->msleep(500);
+    // }
+    // qDebug() << "Finished at 1am" << QThread::currentThread();
+
+    // my thread code segment ends here ˆˆ
+
+    QObject::connect(send.drawArea, SIGNAL(startLineSig(QPointF)), sendThread,
+                     SLOT(sendStartLine(QPointF)));
+    QObject::connect(send.drawArea, SIGNAL(continueLineSig(QPointF)),
+                     sendThread, SLOT(sendContinueLine(QPointF)));
+    QObject::connect(send.clearScreen, &QAction::triggered, sendThread,
+                     &SendThread::sendClearScreen);
+
+    QObject::connect(recThread, &ReceiveThread::startLineSig, receive.drawArea,
+                     &DrawArea::startLine);
+    QObject::connect(recThread, &ReceiveThread::continueLineSig,
+                     receive.drawArea, &DrawArea::continueLine);
+    QObject::connect(recThread, &ReceiveThread::clearScreenSig,
+                     receive.drawArea, &DrawArea::clearScreen);
 
     send.show();
     receive.show();
-
-    // starting worker thread(s)
-    pthread_t worker_thread;
-    int rc = pthread_create(&worker_thread, NULL, worker, (void*)1);
-    if (rc) {
-        qDebug() << "Unable to start worker thread.";
-        exit(1);
-    }
 
     // start window event loop
     qDebug() << "Starting event loop...";
     int ret = a.exec();
     qDebug() << "Event loop stopped.";
 
-    // cleanup pthreads <- what does this mean? this exits the main thread (surely not intended)
-    // pthread_exit(NULL);
+    recThread->finished = true;
+    sendThread->finished = true;
+    threadR.quit();
+    threadS.quit();
+    threadR.wait();
+    threadS.wait();
 
-    // exit
+    // qDebug() << QThread::currentThread()->isRunning();
+    // qDebug() << threadR.isRunning();
+    // qDebug() << threadS.isRunning();
+
     return ret;
 }

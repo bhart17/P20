@@ -16,6 +16,11 @@ class Window : public QMainWindow {
     explicit Window(QWidget *parent = 0);
     ~Window();
     DrawArea *drawArea;
+    void closeEvent(QCloseEvent *event);
+    void keyPressEvent(QKeyEvent *event);
+
+   signals:
+    void closed();
 };
 
 #endif  // WINDOW_H
