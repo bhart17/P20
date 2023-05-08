@@ -22,7 +22,14 @@ void ReceiveThread::receive() {
         // qDebug() << "Received: " << Thread::clock << (int)Thread::pin;
         bool lastClock = digitalRead(REC_CLOCK);
         while (digitalRead(REC_CLOCK) == lastClock && i < 21) {
-            delayMicroseconds(250);
+            auto prevMillis = micros();
+            while (true) {
+                auto currentMillis = micros();
+                if (currentMillis - prevMillis > 250) {
+                    break;
+                }
+            }
+            // delayMicroseconds(250);
             // QThread::currentThread()->usleep(250);
         }
         // QThread::currentThread()->msleep(1);
@@ -60,7 +67,14 @@ void ReceiveThread::run() {
             receive();
         } else {
             lastClock = digitalRead(REC_CLOCK);
-            delayMicroseconds(250);
+            auto prevMillis = micros();
+            while (true) {
+                auto currentMillis = micros();
+                if (currentMillis - prevMillis > 250) {
+                    break;
+                }
+            }
+            // delayMicroseconds(250);
             // QThread::currentThread()->usleep(250);
         }
     }

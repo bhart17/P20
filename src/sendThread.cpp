@@ -26,15 +26,14 @@ void SendThread::send(unsigned int data) {
         clock = !clock;
         digitalWrite(SEND_CLOCK, clock);
         // qDebug() << "Sent: " << Thread::clock << (int)Thread::pin;
-        auto prevMillis = 0;
+        auto prevMillis = millis();
         while (true) {
             auto currentMillis = millis();
             if (currentMillis - prevMillis > 2) {
-                prevMillis = currentMillis;
-            } else {
                 break;
             }
         }
+        // qDebug() << "waited";
         // QThread::currentThread()->msleep(2);
     }
     // Thread::clock = !Thread::clock;
@@ -78,7 +77,14 @@ void SendThread::run() {
             send(queue.dequeue());
             // emit send(queue.dequeue());
         } else {
-            delayMicroseconds(250);
+            auto prevMillis = micros();
+            while (true) {
+                auto currentMillis = micros();
+                if (currentMillis - prevMillis > 250) {
+                    break;
+                }
+            }
+            // delayMicroseconds(250);
             // QThread::currentThread()->usleep(250);
         }
     }
