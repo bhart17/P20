@@ -84,9 +84,6 @@ int main(int argc, char* argv[]) {
     QObject::connect(recThread, &ReceiveThread::clearScreenSig,
                      receive.drawArea, &DrawArea::clearScreen);
 
-    QObject::connect(sendThread, &SendThread::send, recThread,
-                     &ReceiveThread::receive);
-
     send.show();
     receive.show();
 

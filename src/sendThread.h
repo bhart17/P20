@@ -16,11 +16,11 @@ class SendThread : public Thread {
     void sendClearScreen();
     // void run();
 
-   signals:
-    void send(unsigned int data);
+//    signals:
+//     void send(unsigned int data);
 
    private:
-    // void send(unsigned int data);
+    void send(unsigned int data);
     unsigned int serialise(type type, QPointF data);
     unsigned int serialise(type type);
     // QQueue<unsigned int> queue;
