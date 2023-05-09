@@ -9,11 +9,6 @@ class DrawAreaSend : public DrawArea {
    public:
     DrawAreaSend(QWidget *parent = nullptr);
 
-//    signals:
-//     void sendSignal(int type, QPoint point);
-    // void startLineSig(QPoint start);
-    // void continueLineSig(QPoint next);
-
    protected:
     void mousePressEvent(QMouseEvent *event);
     void mouseMoveEvent(QMouseEvent *event);

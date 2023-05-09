@@ -14,15 +14,11 @@ class SendThread : public Thread {
 
    public slots:
     void sendHandler(int type, QPoint point);
-    // void sendStartLine(QPoint start);
-    // void sendContinueLine(QPoint next);
-    // void sendClearScreen();
     void run();
 
    private:
     void send(unsigned int data);
     unsigned int serialise(type type, QPoint data);
-    unsigned int serialise(type type);
     QQueue<unsigned int> queue;
     int count{0};
 };

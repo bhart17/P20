@@ -24,16 +24,6 @@ unsigned int SendThread::serialise(type type, QPoint data) {
            (std::clamp((int)data.x(), 0, 1023) << 12);
 }
 
-unsigned int SendThread::serialise(type type) { return type; }
-
-// void SendThread::sendStartLine(QPoint start) {
-//     queue.enqueue(serialise(START, start));
-// }
-// void SendThread::sendContinueLine(QPoint next) {
-//     queue.enqueue(serialise(CONTINUE, next));
-// }
-// void SendThread::sendClearScreen() { queue.enqueue(serialise(CLEAR)); }
-
 void SendThread::sendHandler(int type_, QPoint point) {
     queue.enqueue(serialise((type)type_, point));
 }
