@@ -34,8 +34,8 @@ unsigned int SendThread::serialise(type type) { return type; }
 // }
 // void SendThread::sendClearScreen() { queue.enqueue(serialise(CLEAR)); }
 
-void SendThread::sendHandler(type type, QPoint point) {
-    queue.enqueue(serialise(type, point));
+void SendThread::sendHandler(int type_, QPoint point) {
+    queue.enqueue(serialise((type)type_, point));
 }
 
 void SendThread::run() {

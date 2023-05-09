@@ -17,7 +17,7 @@ class ReceiveThread : public Thread {
     void receive();
 
    signals:
-    void receiveSignal(type type, QPoint point);
+    void receiveSignal(int type, QPoint point);
     // void startLineSig(QPoint start);
     // void continueLineSig(QPoint next);
     // void clearScreenSig();

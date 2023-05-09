@@ -20,7 +20,6 @@ int main(int argc, char* argv[]) {
     pullUpDnControl(REC_CLOCK, PUD_DOWN);
     digitalWrite(SEND_CLOCK, true);
 
-    // setup Qt GUI
     QApplication app(argc, argv);
     SendWindow send;
     ReceiveWindow receive;
@@ -49,10 +48,6 @@ int main(int argc, char* argv[]) {
     QObject::connect(&threadS, &QThread::started, sendThread, &SendThread::run);
     threadS.start();
 
-    QObject::connect(send.clearScreen, &QAction::triggered, sendThread,
-                     [sendThread] {
-                         (*sendThread).sendHandler(CLEAR, QPoint{0, 0});
-                     });  // perhaps this can be done better
     QObject::connect((DrawAreaSend*)send.drawArea, &DrawAreaSend::sendSignal,
                      sendThread, &SendThread::sendHandler);
     QObject::connect(recThread, &ReceiveThread::receiveSignal, receive.drawArea,
@@ -61,7 +56,6 @@ int main(int argc, char* argv[]) {
     send.show();
     receive.show();
 
-    // start window event loop
     qDebug() << "Starting event loop...";
     auto ret = app.exec();
     qDebug() << "Event loop stopped.";

@@ -15,8 +15,11 @@ class DrawArea : public QWidget {
     DrawArea(QWidget *parent = nullptr);
 
    public slots:
-    void receiveHandler(type type, QPoint point);
+    void receiveHandler(int type, QPoint point);
     void clearScreen();
+
+   signals:
+    void sendSignal(int type, QPoint point);
 
    protected:
     void startLine(QPoint start);

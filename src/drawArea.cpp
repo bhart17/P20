@@ -19,6 +19,7 @@ void DrawArea::paintEvent(QPaintEvent* event) {
 }
 
 void DrawArea::clearScreen() {
+    emit sendSignal(CLEAR, QPoint{0, 0});
     for (QList<QList<QLine>>::iterator line = lines.begin();
          line != lines.end(); ++line) {
         (*line).clear();
@@ -46,7 +47,7 @@ void DrawArea::continueLine(QPoint next) {
     update();
 }
 
-void DrawArea::receiveHandler(type type, QPoint point) {
+void DrawArea::receiveHandler(int type, QPoint point) {
     switch (type) {
         case START:
             startLine(point);
