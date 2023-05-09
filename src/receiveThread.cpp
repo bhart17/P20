@@ -8,7 +8,7 @@ void ReceiveThread::receive() {
             if ((millis() - startTime) > 25) {
                 qDebug().nospace().noquote()
                     << "Received: "
-                    << QString::number(data, 2).rightJustified(22, '0') << " (#"
+                    << QString::number(data, 2).rightJustified(22, '0') << "(#"
                     << count++ << ") ⚠️ Packet error: before data read";
                 return;
             }
@@ -19,7 +19,7 @@ void ReceiveThread::receive() {
             if ((millis() - startTime) > 25) {
                 qDebug().nospace().noquote()
                     << "Received: "
-                    << QString::number(data, 2).rightJustified(22, '0') << " (#"
+                    << QString::number(data, 2).rightJustified(22, '0') << "(#"
                     << count++ << ") ⚠️ Packet error: after data read";
                 return;
             }
@@ -32,22 +32,8 @@ void ReceiveThread::receive() {
 }
 
 void ReceiveThread::deserialise(unsigned int data) {
-    switch (data & 3) {
-        case START:
-            emit startLineSig(
-                QPoint{(int)(data >> 12), (int)((data >> 2) & 1023)});
-            break;
-        case CONTINUE:
-            emit continueLineSig(
-                QPoint{(int)(data >> 12), (int)((data >> 2) & 1023)});
-            break;
-        case CLEAR:
-            emit clearScreenSig();
-            break;
-        default:
-            qDebug() << "Fell Through";
-            break;
-    }
+    emit receiveSignal((type)(data & 3),
+                       QPoint{(int)(data >> 12), (int)((data >> 2) & 1023)});
 }
 
 void ReceiveThread::run() {

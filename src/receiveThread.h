@@ -17,9 +17,10 @@ class ReceiveThread : public Thread {
     void receive();
 
    signals:
-    void startLineSig(QPoint start);
-    void continueLineSig(QPoint next);
-    void clearScreenSig();
+    void receiveSignal(type type, QPoint point);
+    // void startLineSig(QPoint start);
+    // void continueLineSig(QPoint next);
+    // void clearScreenSig();
 
    private:
     void deserialise(unsigned int data);

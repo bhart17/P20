@@ -45,3 +45,20 @@ void DrawArea::continueLine(QPoint next) {
     last = next;
     update();
 }
+
+void DrawArea::receiveHandler(type type, QPoint point) {
+    switch (type) {
+        case START:
+            startLine(point);
+            break;
+        case CONTINUE:
+            continueLine(point);
+            break;
+        case CLEAR:
+            clearScreen();
+            break;
+        default:
+            qDebug() << "Fell Through";
+            break;
+    }
+}

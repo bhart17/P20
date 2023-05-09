@@ -26,13 +26,17 @@ unsigned int SendThread::serialise(type type, QPoint data) {
 
 unsigned int SendThread::serialise(type type) { return type; }
 
-void SendThread::sendStartLine(QPoint start) {
-    queue.enqueue(serialise(START, start));
+// void SendThread::sendStartLine(QPoint start) {
+//     queue.enqueue(serialise(START, start));
+// }
+// void SendThread::sendContinueLine(QPoint next) {
+//     queue.enqueue(serialise(CONTINUE, next));
+// }
+// void SendThread::sendClearScreen() { queue.enqueue(serialise(CLEAR)); }
+
+void SendThread::sendHandler(type type, QPoint point) {
+    queue.enqueue(serialise(type, point));
 }
-void SendThread::sendContinueLine(QPoint next) {
-    queue.enqueue(serialise(CONTINUE, next));
-}
-void SendThread::sendClearScreen() { queue.enqueue(serialise(CLEAR)); }
 
 void SendThread::run() {
     while (!finished) {

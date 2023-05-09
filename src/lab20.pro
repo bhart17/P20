@@ -30,7 +30,8 @@ HEADERS  += window.h \
         drawAreaSend.h \
         thread.h \
         sendThread.h \
-        receiveThread.h
+        receiveThread.h \
+        consts.h
 
 LIBS += -L/usr/local/lib -lwiringPi
 #LIBS += -L/usr/local/lib

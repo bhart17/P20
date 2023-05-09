@@ -13,9 +13,10 @@ class SendThread : public Thread {
     std::atomic<bool> finished{false};
 
    public slots:
-    void sendStartLine(QPoint start);
-    void sendContinueLine(QPoint next);
-    void sendClearScreen();
+    void sendHandler(type type, QPoint point);
+    // void sendStartLine(QPoint start);
+    // void sendContinueLine(QPoint next);
+    // void sendClearScreen();
     void run();
 
    private:

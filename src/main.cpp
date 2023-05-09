@@ -49,20 +49,14 @@ int main(int argc, char* argv[]) {
     QObject::connect(&threadS, &QThread::started, sendThread, &SendThread::run);
     threadS.start();
 
-    QObject::connect((DrawAreaSend*)send.drawArea, &DrawAreaSend::startLineSig,
-                     sendThread, &SendThread::sendStartLine);
-    QObject::connect((DrawAreaSend*)send.drawArea,
-                     &DrawAreaSend::continueLineSig, sendThread,
-                     &SendThread::sendContinueLine);
     QObject::connect(send.clearScreen, &QAction::triggered, sendThread,
-                     &SendThread::sendClearScreen);
-
-    QObject::connect(recThread, &ReceiveThread::startLineSig, receive.drawArea,
-                     &DrawArea::startLine);
-    QObject::connect(recThread, &ReceiveThread::continueLineSig,
-                     receive.drawArea, &DrawArea::continueLine);
-    QObject::connect(recThread, &ReceiveThread::clearScreenSig,
-                     receive.drawArea, &DrawArea::clearScreen);
+                     [sendThread] {
+                         (*sendThread).sendHandler(CLEAR, QPoint{0, 0});
+                     });  // perhaps this can be done better
+    QObject::connect((DrawAreaSend*)send.drawArea, &DrawAreaSend::sendSignal,
+                     sendThread, &SendThread::sendHandler);
+    QObject::connect(recThread, &ReceiveThread::receiveSignal, receive.drawArea,
+                     &DrawArea::receiveHandler);
 
     send.show();
     receive.show();
