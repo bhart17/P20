@@ -1,9 +1,9 @@
 #include "thread.h"
 
 Thread::Thread(QObject *parent) : QObject(parent) {
-    qDebug() << this << "Thread Started" << QThread::currentThread();
+    qDebug() << this << "started, parent" << QThread::currentThread();
 }
 
 Thread::~Thread() {
-    qDebug() << this << "Thread Ended" << QThread::currentThread();
+    qDebug() << QThread::currentThread() << "ended";
 }

@@ -19,13 +19,20 @@ void DrawArea::paintEvent(QPaintEvent* event) {
 }
 
 void DrawArea::clearScreen() {
-    // potentially this is a memory leak
+    for (QList<QList<QLine>>::iterator line = lines.begin();
+         line != lines.end(); ++line) {
+        (*line).clear();
+    }
     lines.clear();
     update();
 }
 
 void DrawArea::startLine(QPoint start) {
-    lines.append(QList<QLine>{});
+    if (lines.isEmpty()) {
+        lines.append(QList<QLine>{});
+    } else if (!lines.last().isEmpty()) {
+        lines.append(QList<QLine>{});
+    }
     last = start;
 }
 

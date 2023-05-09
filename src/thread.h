@@ -8,16 +8,16 @@
 #include <QThread>
 #include <algorithm>
 
-// #include "wiringPi.h"
+#include "wiringPi.h"
 
-const auto SLEEP_MS = 50;
+const auto SLEEP_MS = 8;
 
 const int SEND_DATA = 0;
-// const int SEND_CLOCK = 1;
+const int SEND_CLOCK = 1;
 const int REC_DATA = 2;
-// const int REC_CLOCK = 3;
+const int REC_CLOCK = 3;
 
-enum type { START, CONTINUE, CLEAR };
+enum type { CLEAR, START, CONTINUE };
 
 class Thread : public QObject {
     Q_OBJECT
@@ -25,9 +25,6 @@ class Thread : public QObject {
    public:
     explicit Thread(QObject *parent = nullptr);
     ~Thread();
-
-   protected:
-    inline static bool pin{false};
 };
 
 #endif  // THREAD_H

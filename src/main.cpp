@@ -1,5 +1,3 @@
-// #include <wiringPi.h>
-
 #include <QApplication>
 #include <QDebug>
 #include <QObject>
@@ -13,11 +11,14 @@
 int main(int argc, char* argv[]) {
     // setup GPIO interface - uncomment when needed
     // needs to run with root via sudo in terminal.
-    // wiringPiSetup();
-    // pinMode(SEND_DATA, OUTPUT);
-    // pinMode(SEND_CLOCK, OUTPUT);
-    // pinMode(REC_DATA, INPUT);
-    // pinMode(REC_CLOCK, INPUT);
+    wiringPiSetup();
+    pinMode(SEND_DATA, OUTPUT);
+    pinMode(SEND_CLOCK, OUTPUT);
+    pinMode(REC_DATA, INPUT);
+    pinMode(REC_CLOCK, INPUT);
+    pullUpDnControl(REC_DATA, PUD_DOWN);
+    pullUpDnControl(REC_CLOCK, PUD_DOWN);
+    digitalWrite(SEND_CLOCK, true);
 
     // setup Qt GUI
     QApplication app(argc, argv);
