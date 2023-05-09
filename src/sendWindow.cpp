@@ -3,9 +3,7 @@
 SendWindow::SendWindow(QWidget* parent) : Window(parent) {
     drawArea = new DrawAreaSend(this);
     setCentralWidget(drawArea);
-
     setWindowTitle(tr("Send"));
-
     createActions();
     createMenus();
 }

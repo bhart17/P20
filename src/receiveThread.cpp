@@ -1,108 +1,68 @@
 #include "receiveThread.h"
 
-void ReceiveThread::testRun()
-{
-    qDebug() << "I love trees" << QThread::currentThread();
-    for (int i = 0; i < 10; i++)
-    {
-        qDebug() << "Me three" << QString::number(i)
-                 << QThread::currentThread();
-        QThread::currentThread()->msleep(500);
-    }
-    qDebug() << "Finished at 3am" << QThread::currentThread();
-    this->deleteLater(); // This apparently deletes the otherwise unmanaged
-                         // point created by: "ReceiveThread *recThread = new
-                         // ReceiveThread()" in main.cpp
-}
+void ReceiveThread::receive() {
+    auto data = 0;
+    // QThread::currentThread()->msleep(1000*(1/BAUD));
+    for (auto i = 0; i < 22; ++i) {
+        // data = (digitalRead(REC_DATA) << i) | data;
+        QThread::currentThread()->msleep(SLEEP_MS);
+        data = (Thread::pin << i) | data;
 
-void ReceiveThread::receive()
-{
-    // Thread::mutex.lock();
-    unsigned int data = 0;
-    // QThread::currentThread()->msleep(1);
-    for (int i = 0; i < 22; ++i)
-    {
-        data = (digitalRead(REC_DATA) << i) | data;
-        bool lastClock = digitalRead(REC_CLOCK);
-        qDebug() << "Clock " << i << lastClock;
-        // qDebug() << "Received: " << lastClock << digitalRead(REC_DATA);
-        //  auto prevMillis = micros();
-        auto errorInterval = micros();
-        while (digitalRead(REC_CLOCK) == lastClock && i < 21)
-        {
-            // auto prevMillis = micros();
-            // while (true)
-            // {
-            //     auto currentMillis = micros();
-            //     if (currentMillis - prevMillis > 10)
-            //     {
-            //         break;
-            //     }
-            // }
-            auto currentMillis = micros();
-            if (currentMillis - errorInterval > 2000)
-            {
-                return;
-             }
-            // delayMicroseconds(250);
-            // QThread::currentThread()->usleep(250);
-        }
-        // QThread::currentThread()->msleep(1);
+        // auto prevMicros = micros();
+        //     while (true) {
+        //         auto currentMicros = micros();
+        //         if (currentMicros - prevMicros > 10) {
+        //             break;
+        //         }
+        //     }
     }
-    // QThread::currentThread()->msleep(1);
-    qDebug() << "Received: " << QString::number(data, 2).rightJustified(22, '0');
-    // Thread::mutex.unlock();mamak
+    QThread::currentThread()->msleep(SLEEP_MS);
+
+    qDebug() << "Received:" << QString::number(data, 2).rightJustified(22, '0')
+             << "(#" << count++ << ")";
     deserialise(data);
 }
 
-void ReceiveThread::deserialise(unsigned int data)
-{
-    switch (data & 3)
-    {
-    case START:
-        emit startLineSig(
-            QPoint{(int)(data >> 12), (int)((data >> 2) & 1023)});
-        break;
-    case CONTINUE:
-        emit continueLineSig(
-            QPoint{(int)(data >> 12), (int)((data >> 2) & 1023)});
-        break;
-    case CLEAR:
-        emit clearScreenSig();
-        break;
-    default:
-        qDebug() << "fell through " << data;
-        break;
+void ReceiveThread::deserialise(unsigned int data) {
+    switch (data & 3) {
+        case START:
+            emit startLineSig(
+                QPoint{(int)(data >> 12), (int)((data >> 2) & 1023)});
+            break;
+        case CONTINUE:
+            emit continueLineSig(
+                QPoint{(int)(data >> 12), (int)((data >> 2) & 1023)});
+            break;
+        case CLEAR:
+            emit clearScreenSig();
+            break;
+        default:
+            qDebug() << "Fell Through";
+            break;
     }
 }
 
-void ReceiveThread::run()
-{
-    // bool lastClock = digitalRead(REC_CLOCK);
-    while (!finished)
-    {
-        // QCoreApplication::processEvents();
-        // if (digitalRead(REC_CLOCK) != lastClock) {
-        if (digitalRead(REC_CLOCK) == true)
-        {
+void ReceiveThread::run() {
+    while (!finished) {
+        // if (digitalRead(REC_DATA) == true) {
+        // if (Thread::pin == false) {
+        //     receive();
+        // } else {
+        //     QThread::currentThread()->usleep(100);
 
+        //     //     auto prevMillis = micros();
+        //     //     while (true) {
+        //     //         auto currentMillis = micros();
+        //     //         if (currentMillis - prevMillis > 250) {
+        //     //             break;
+        //     //         }
+        //     //     }
+        // }
+
+        while (!finished && Thread::pin == true) {
             receive();
         }
-        else
-        {
-            // lastClock = digitalRead(REC_CLOCK);
-            auto prevMillis = micros();
-            while (true)
-            {
-                auto currentMillis = micros();
-                if (currentMillis - prevMillis > 250)
-                {
-                    break;
-                }
-            }
-            // delayMicroseconds(250);
-            // QThread::currentThread()->usleep(250);
-        }
+        QThread::currentThread()->usleep(500);
     }
     deleteLater();
 }

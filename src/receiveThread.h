@@ -13,7 +13,6 @@ class ReceiveThread : public Thread {
     std::atomic<bool> finished{false};
 
    public slots:
-    void testRun();
     void run();
     void receive();
 
@@ -23,8 +22,8 @@ class ReceiveThread : public Thread {
     void clearScreenSig();
 
    private:
-    // void receive(unsigned int data);
     void deserialise(unsigned int data);
+    int count{0};
 };
 
 #endif

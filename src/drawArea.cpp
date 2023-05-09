@@ -30,11 +30,11 @@ void DrawArea::startLine(QPoint start) {
 }
 
 void DrawArea::continueLine(QPoint next) {
-    // if ((next - last).manhattanLength() > 25) {
-        if (!lines.isEmpty()) {
-            lines.last().append(QLine{last, next});
-            last = next;
-            update();
-        }
-    // }
+    if (lines.isEmpty()) {
+        qDebug() << "Continue received before start";
+        return;
+    }
+    lines.last().append(QLine{last, next});
+    last = next;
+    update();
 }

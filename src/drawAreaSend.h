@@ -14,7 +14,6 @@ class DrawAreaSend : public DrawArea {
    signals:
     void startLineSig(QPoint start);
     void continueLineSig(QPoint next);
-    // void clearScreenSig();
 
    protected:
     void mousePressEvent(QMouseEvent *event);

@@ -1,51 +1,29 @@
 #include "sendThread.h"
 
-void SendThread::testRun() {
-    qDebug() << "I love trees" << QThread::currentThread();
-    for (int i = 0; i < 10; i++) {
-        qDebug() << "Me three" << QString::number(i)
-                 << QThread::currentThread();
-        QThread::currentThread()->msleep(500);
-    }
-    qDebug() << "Finished at 3am" << QThread::currentThread();
-    this->deleteLater();  // This apparently deletes the otherwise unmanaged
-                          // point created by: "ReceiveThread *recThread = new
-                          // ReceiveThread()" in main.cpp
-}
+#include <chrono>
 
 void SendThread::send(unsigned int data) {
-    // Thread::mutex.lock();
-    // Thread::pin = true;
-    // Thread::clock = true;
-    // qDebug() << "Sent: " << Thread::clock << (int)Thread::pin;
-    // QThread::currentThread()->msleep(1);
+    Thread::pin = true;
+    // digitalWrite(SEND_DATA, true);
+    QThread::currentThread()->msleep(SLEEP_MS);
     for (int i = 0; i < 22; ++i) {
-        // Thread::pin = (data >> i) & 1;
-        // Thread::clock = !Thread::clock;
-        digitalWrite(SEND_DATA, (data >> i) & 1);
-        clock = !clock;
-        digitalWrite(SEND_CLOCK, clock);
-        qDebug() << "Clock " << i << clock;
-        // qDebug() << "Sent: " << clock << ((data >> i) & 1);
-        auto prevMillis = micros();
-        while (true) {
-            auto currentMillis = micros();
-            if (currentMillis - prevMillis > 500) {
-                break;
-            }
-        }
-        // qDebug() << "waited";
-        // QThread::currentThread()->msleep(2);
+        Thread::pin = (data >> i) & 1;
+        // digitalWrite(SEND_DATA, (data >> i) & 1);
+        QThread::currentThread()->msleep(SLEEP_MS);
+
+        // auto prevMillis = micros();
+        // while (true) {
+        //     auto currentMillis = micros();
+        //     if (currentMillis - prevMillis > 500) {
+        //         break;
+        //     }
+        // }
     }
-    // Thread::clock = !Thread::clock;
-    // qDebug() << "Sent: " << Thread::clock << (int)Thread::pin;
-    // QThread::currentThread()->msleep(1);
-    // Thread::clock = false;
-    // qDebug() << "Sent: " << Thread::clock << (int)Thread::pin;
-    // Thread::pin = false;
-    // QThread::currentThread()->msleep(1);
-    qDebug() << "Sent:     " << QString::number(data, 2).rightJustified(22, '0');
-    // Thread::mutex.unlock();
+    Thread::pin = false;
+    QThread::currentThread()->msleep(SLEEP_MS);
+
+    qDebug() << "Sent:    " << QString::number(data, 2).rightJustified(22, '0')
+             << "(#" << count++ << ")";
 }
 
 unsigned int SendThread::serialise(type type, QPoint data) {
@@ -58,10 +36,7 @@ unsigned int SendThread::serialise(type type, QPoint data) {
            (std::clamp((int)data.x(), 0, 1024) << 12);
 }
 
-unsigned int SendThread::serialise(type type) {
-    // only for CLEAR
-    return type;
-}
+unsigned int SendThread::serialise(type type) { return type; }
 
 void SendThread::sendStartLine(QPoint start) {
     queue.enqueue(serialise(START, start));
@@ -76,18 +51,24 @@ void SendThread::run() {
         QCoreApplication::processEvents();
         if (!queue.isEmpty()) {
             send(queue.dequeue());
-            // emit send(queue.dequeue());
-        } else {
-            auto prevMillis = micros();
-            while (true) {
-                auto currentMillis = micros();
-                if (currentMillis - prevMillis > 250) {
-                    break;
-                }
-            }
-            // delayMicroseconds(250);
-            // QThread::currentThread()->usleep(250);
+            // } else {
+            // QThread::currentThread()->usleep(500);
+
+            // auto prevMillis = micros();
+            // while (true) {
+            //     auto currentMillis = micros();
+            //     if (currentMillis - prevMillis > 250) {
+            //         break;
+            //     }
+            // }
         }
+        QThread::currentThread()->usleep(500);
+
+        // auto then = std::chrono::high_resolution_clock::now();
+        // QThread::currentThread()->msleep(1);
+        // auto now = std::chrono::high_resolution_clock::now();
+        // auto difference = (now - then).count();
+        // qDebug() << difference;
     }
     deleteLater();
 }

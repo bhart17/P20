@@ -1,4 +1,4 @@
-#include <wiringPi.h>
+// #include <wiringPi.h>
 
 #include <QApplication>
 #include <QDebug>
@@ -13,71 +13,46 @@
 int main(int argc, char* argv[]) {
     // setup GPIO interface - uncomment when needed
     // needs to run with root via sudo in terminal.
-    wiringPiSetup();
-    pinMode(SEND_DATA, OUTPUT);
-    pinMode(SEND_CLOCK, OUTPUT);
-    pinMode(REC_DATA, INPUT);
-    pinMode(REC_CLOCK, INPUT);
+    // wiringPiSetup();
+    // pinMode(SEND_DATA, OUTPUT);
+    // pinMode(SEND_CLOCK, OUTPUT);
+    // pinMode(REC_DATA, INPUT);
+    // pinMode(REC_CLOCK, INPUT);
 
     // setup Qt GUI
-    QApplication a(argc, argv);
+    QApplication app(argc, argv);
     SendWindow send;
     ReceiveWindow receive;
 
-    QObject::connect(&send, &Window::closed, &a,
+    QObject::connect(&send, &Window::closed, &app,
                      &QApplication::closeAllWindows);
-    QObject::connect(&receive, &Window::closed, &a,
+    QObject::connect(&receive, &Window::closed, &app,
                      &QApplication::closeAllWindows);
 
-    // also my thread code vv
     QThread::currentThread()->setObjectName("Main Thread");
-    qDebug() << "Starting" << QThread::currentThread();
 
     // To start the receiver thread:
-    ReceiveThread* recThread = new ReceiveThread();
+    auto recThread = new ReceiveThread;
     QThread threadR;
-    threadR.setObjectName("Receive Thread :)");
+    threadR.setObjectName("Receive Thread");
     recThread->moveToThread(&threadR);
     QObject::connect(&threadR, &QThread::started, recThread,
-                     &ReceiveThread::run);  // when the thread is started,
-                                            // recThread calls the run function
-                                            // from the ReceiveThread class
-    // QObject::connect(&threadR, &QThread::finished, recThread,
-    //                  &QObject::deleteLater);
-    // QObject::connect(&receive, &Window::closed, recThread,
-    //                  &QObject::deleteLater);
+                     &ReceiveThread::run);
     threadR.start();
 
     // To start the sender thread:
-    SendThread* sendThread = new SendThread();
+    auto sendThread = new SendThread;
     QThread threadS;
-    threadS.setObjectName("Send Thread :)");
+    threadS.setObjectName("Send Thread");
     sendThread->moveToThread(&threadS);
-    QObject::connect(
-        &threadS, &QThread::started, sendThread,
-        &SendThread::run);  // when the thread is started, recThread calls
-    // the run function from the ReceiveThread class
-    // QObject::connect(&threadS, &QThread::finished, sendThread,
-    //                  &QObject::deleteLater);
-    // QObject::connect(&send, &Window::closed, sendThread,
-    // &QObject::deleteLater);
+    QObject::connect(&threadS, &QThread::started, sendThread, &SendThread::run);
     threadS.start();
 
-    // for troubleshooting and testing purposes on main thread:
-    // qDebug() << "Doing prep work" << QThread::currentThread();
-    // for (int i = 0; i < 10; i++) {
-    //     qDebug() << "Working Hard" << QString::number(i)
-    //              << QThread::currentThread();
-    //     QThread::currentThread()->msleep(500);
-    // }
-    // qDebug() << "Finished at 1am" << QThread::currentThread();
-
-    // my thread code segment ends here ˆˆ
-
-    QObject::connect(send.drawArea, SIGNAL(startLineSig(QPoint)), sendThread,
-                     SLOT(sendStartLine(QPoint)));
-    QObject::connect(send.drawArea, SIGNAL(continueLineSig(QPoint)),
-                     sendThread, SLOT(sendContinueLine(QPoint)));
+    QObject::connect((DrawAreaSend*)send.drawArea, &DrawAreaSend::startLineSig,
+                     sendThread, &SendThread::sendStartLine);
+    QObject::connect((DrawAreaSend*)send.drawArea,
+                     &DrawAreaSend::continueLineSig, sendThread,
+                     &SendThread::sendContinueLine);
     QObject::connect(send.clearScreen, &QAction::triggered, sendThread,
                      &SendThread::sendClearScreen);
 
@@ -93,7 +68,7 @@ int main(int argc, char* argv[]) {
 
     // start window event loop
     qDebug() << "Starting event loop...";
-    int ret = a.exec();
+    auto ret = app.exec();
     qDebug() << "Event loop stopped.";
 
     recThread->finished = true;
@@ -102,10 +77,6 @@ int main(int argc, char* argv[]) {
     threadS.quit();
     threadR.wait();
     threadS.wait();
-
-    // qDebug() << QThread::currentThread()->isRunning();
-    // qDebug() << threadR.isRunning();
-    // qDebug() << threadS.isRunning();
 
     return ret;
 }
