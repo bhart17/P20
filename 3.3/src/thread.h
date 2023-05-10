@@ -6,7 +6,6 @@
 #include <QPoint>
 #include <QQueue>
 #include <QThread>
-#include <algorithm>
 
 #include "consts.h"
 

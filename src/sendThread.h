@@ -3,6 +3,7 @@
 
 #include <QCoreApplication>
 #include <QQueue>
+#include <algorithm>
 
 #include "thread.h"
 
