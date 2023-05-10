@@ -15,15 +15,13 @@ class DrawArea : public QWidget {
     DrawArea(QWidget *parent = nullptr);
 
    public slots:
-    void receive(unsigned int data);
+    void receive(type type, QPoint point);
     void clearScreen();
 
    signals:
-    void send(unsigned int data);
+    void send(type type, QPoint point);
 
    protected:
-    unsigned int serialise(type type, QPoint point);
-    void deserialise(unsigned int data);
     void startLine(QPoint start);
     void continueLine(QPoint next);
     void paintEvent(QPaintEvent *event);

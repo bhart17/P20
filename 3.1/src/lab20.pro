@@ -27,4 +27,5 @@ HEADERS  += window.h \
         drawAreaSend.h \
         consts.h
 
+#LIBS += -L/usr/local/lib -lwiringPi
 LIBS += -L/usr/local/lib

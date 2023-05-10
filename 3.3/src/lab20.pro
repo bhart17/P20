@@ -33,5 +33,4 @@ HEADERS  += window.h \
         receiveThread.h \
         consts.h
 
-#LIBS += -L/usr/local/lib -lwiringPi
 LIBS += -L/usr/local/lib
