@@ -2,14 +2,14 @@
 #define THREAD_H
 
 #include <QDebug>
-#include <QMutex>
 #include <QObject>
-#include <QPointF>
+#include <QPoint>
 #include <QQueue>
 #include <QThread>
 #include <algorithm>
 
-enum type { START, CONTINUE, CLEAR };
+#include "consts.h"
+// #include "wiringPi.h"
 
 class Thread : public QObject {
     Q_OBJECT
@@ -17,14 +17,10 @@ class Thread : public QObject {
    public:
     explicit Thread(QObject *parent = nullptr);
     ~Thread();
-    // inline static QQueue<unsigned int> queue;
-    inline static bool pin;
-    inline static bool clock = 0;
 
-    //    public slots:
-    //     void run();
    protected:
-    // inline static QMutex mutex;
+    inline static bool pin;
+    inline static bool clock{true};
 };
 
 #endif  // THREAD_H

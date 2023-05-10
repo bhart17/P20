@@ -3,6 +3,7 @@
 
 #include <QCoreApplication>
 #include <atomic>
+#include <chrono>
 
 #include "thread.h"
 
@@ -10,21 +11,18 @@ class ReceiveThread : public Thread {
     Q_OBJECT
 
    public:
-    std::atomic<bool> finished = false;
+    std::atomic<bool> finished{false};
 
    public slots:
-    void testRun();
     void run();
     void receive();
 
    signals:
-    void startLineSig(QPointF start);
-    void continueLineSig(QPointF next);
-    void clearScreenSig();
+    void receiveSignal(int type, QPoint point);
 
    private:
-    // void receive(unsigned int data);
     void deserialise(unsigned int data);
+    int count{0};
 };
 
 #endif

@@ -1,65 +1,50 @@
 #include "receiveThread.h"
 
-void ReceiveThread::testRun() {
-    qDebug() << "I love trees" << QThread::currentThread();
-    for (int i = 0; i < 10; i++) {
-        qDebug() << "Me three" << QString::number(i)
-                 << QThread::currentThread();
-        QThread::currentThread()->msleep(500);
-    }
-    qDebug() << "Finished at 3am" << QThread::currentThread();
-    this->deleteLater();  // This apparently deletes the otherwise unmanaged
-                          // point created by: "ReceiveThread *recThread = new
-                          // ReceiveThread()" in main.cpp
-}
-
 void ReceiveThread::receive() {
-    // Thread::mutex.lock();
     unsigned int data = 0;
-    // QThread::currentThread()->msleep(1);
-    for (int i = 0; i < 22; ++i) {
-        data = (Thread::pin << i) | data;
-        //qDebug() << "Received: " << Thread::clock << (int)Thread::pin;
-        bool lastClock = Thread::clock;
-        while (Thread::clock == lastClock && i < 21) {
-            QThread::currentThread()->usleep(100);
+    for (auto i = 0; i < 22; ++i) {
+        using namespace std::chrono;
+        auto startTime = high_resolution_clock::now();
+        while (!Thread::clock) {
+            if (duration_cast<milliseconds>(high_resolution_clock::now() -
+                                            startTime)
+                    .count() > TIMEOUT_MS) {
+                qDebug().nospace().noquote()
+                    << "Received: "
+                    << QString::number(data, 2).rightJustified(22, '0') << " (#"
+                    << count++ << ") ⚠️ Packet error: before data read";
+                return;
+            }
         }
-        // QThread::currentThread()->msleep(1);
+        data = (Thread::pin << i) | data;
+        startTime = high_resolution_clock::now();
+        while (Thread::clock && i < 21) {
+            if (duration_cast<milliseconds>(high_resolution_clock::now() -
+                                            startTime)
+                    .count() > TIMEOUT_MS) {
+                qDebug().nospace().noquote()
+                    << "Received: "
+                    << QString::number(data, 2).rightJustified(22, '0') << " (#"
+                    << count++ << ") ⚠️ Packet error: after data read";
+                return;
+            }
+        }
     }
-    // QThread::currentThread()->msleep(1);
-    qDebug() << "Received: " << QString::number(data, 2);
-    // Thread::mutex.unlock();mamak
+    qDebug().nospace().noquote()
+        << "Received: " << QString::number(data, 2).rightJustified(22, '0')
+        << " (#" << count++ << ")";
     deserialise(data);
 }
 
 void ReceiveThread::deserialise(unsigned int data) {
-    switch (data & 3) {
-        case START:
-            emit startLineSig(
-                QPointF{(qreal)(data >> 12), (qreal)((data >> 2) & 1023)});
-            break;
-        case CONTINUE:
-            emit continueLineSig(
-                QPointF{(qreal)(data >> 12), (qreal)((data >> 2) & 1023)});
-            break;
-        case CLEAR:
-            emit clearScreenSig();
-            break;
-        default:
-            qDebug() << "fell through";
-            break;
-    }
+    emit receiveSignal((type)(data & 3),
+                       QPoint{(int)(data >> 12), (int)((data >> 2) & 1023)});
 }
 
 void ReceiveThread::run() {
-    bool lastClock = Thread::clock;
     while (!finished) {
-        // QCoreApplication::processEvents();
-        if (Thread::clock != lastClock) {
+        if (!Thread::clock) {
             receive();
-        } else {
-            lastClock = Thread::clock;
-            QThread::currentThread()->usleep(100);
         }
     }
     deleteLater();

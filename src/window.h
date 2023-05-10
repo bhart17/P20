@@ -2,10 +2,6 @@
 #define WINDOW_H
 
 #include <QMainWindow>
-#include <QMenu>
-#include <QMenuBar>
-#include <QMouseEvent>
-#include <QPainter>
 
 #include "drawArea.h"
 
