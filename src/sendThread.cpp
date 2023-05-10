@@ -23,7 +23,7 @@ unsigned int SendThread::serialise(type type, QPoint point) {
     // 0b1010101001001100110001
     auto data = type | (std::clamp((int)point.y(), 0, 1023) << 2) |
            (std::clamp((int)point.x(), 0, 1023) << 12);
-    data |= __builtin_parity(data) >> 22;
+    data |= __builtin_parity(data) << 22;
     return data;
 }
 

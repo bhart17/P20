@@ -39,7 +39,8 @@ void DrawArea::startLine(QPoint start) {
 
 void DrawArea::continueLine(QPoint next) {
     if (lines.isEmpty()) {
-        qDebug() << "Continue received before start";
+        qDebug() << "⚠️ Continue received before start";
+        startLine(next);
         return;
     }
     lines.last().append(QLine{last, next});
@@ -59,7 +60,7 @@ void DrawArea::receiveHandler(int type, QPoint point) {
             clearScreen();
             break;
         default:
-            qDebug() << "Fell Through";
+            qDebug() << "⚠️ Invalid type";
             break;
     }
 }
