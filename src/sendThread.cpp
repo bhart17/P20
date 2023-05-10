@@ -4,11 +4,11 @@ void SendThread::send(unsigned int data) {
     for (int i = 0; i < 22; ++i) {
         digitalWrite(SEND_DATA, (data >> i) & 1);
         digitalWrite(SEND_CLOCK, false);
-        delayMicroseconds(SLEEP_MS * 500);
+        delayMicroseconds(SLEEP_US / 2);
         digitalWrite(SEND_CLOCK, true);
-        delayMicroseconds(SLEEP_MS * 500);
+        delayMicroseconds(SLEEP_US / 2);
     }
-    delayMicroseconds(SLEEP_MS * 1000);
+    delayMicroseconds(SLEEP_US);
     qDebug().nospace().noquote()
         << "Sent:     " << QString::number(data, 2).rightJustified(22, '0')
         << " (#" << count++ << ")";

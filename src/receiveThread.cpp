@@ -1,11 +1,11 @@
 #include "receiveThread.h"
 
 void ReceiveThread::receive() {
-    auto data = 0;
+    unsigned int data = 0;
     for (auto i = 0; i < 22; ++i) {
         auto startTime = millis();
         while (!digitalRead(REC_CLOCK)) {
-            if ((millis() - startTime) > 25) {
+            if ((millis() - startTime) > 15) {
                 qDebug().nospace().noquote()
                     << "Received: "
                     << QString::number(data, 2).rightJustified(22, '0') << "(#"
@@ -16,7 +16,7 @@ void ReceiveThread::receive() {
         data = (digitalRead(REC_DATA) << i) | data;
         startTime = millis();
         while (digitalRead(REC_CLOCK) && i < 21) {
-            if ((millis() - startTime) > 25) {
+            if ((millis() - startTime) > 15) {
                 qDebug().nospace().noquote()
                     << "Received: "
                     << QString::number(data, 2).rightJustified(22, '0') << "(#"

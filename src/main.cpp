@@ -1,7 +1,4 @@
 #include <QApplication>
-#include <QDebug>
-#include <QObject>
-#include <QThread>
 
 #include "receiveThread.h"
 #include "receiveWindow.h"
