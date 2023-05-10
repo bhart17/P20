@@ -1,6 +1,9 @@
 #ifndef SENDWINDOW_H
 #define SENDWINDOW_H
 
+#include <QMenu>
+#include <QMenuBar>
+
 #include "drawAreaSend.h"
 #include "window.h"
 

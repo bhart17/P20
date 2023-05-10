@@ -19,22 +19,47 @@ void DrawArea::paintEvent(QPaintEvent* event) {
 }
 
 void DrawArea::clearScreen() {
-    // potentially this is a memory leak
+    emit sendSignal(CLEAR, QPoint{0, 0});
+    for (QList<QList<QLine>>::iterator line = lines.begin();
+         line != lines.end(); ++line) {
+        (*line).clear();
+    }
     lines.clear();
     update();
 }
 
 void DrawArea::startLine(QPoint start) {
-    lines.append(QList<QLine>{});
+    if (lines.isEmpty()) {
+        lines.append(QList<QLine>{});
+    } else if (!lines.last().isEmpty()) {
+        lines.append(QList<QLine>{});
+    }
     last = start;
 }
 
 void DrawArea::continueLine(QPoint next) {
-    // if ((next - last).manhattanLength() > 25) {
-        if (!lines.isEmpty()) {
-            lines.last().append(QLine{last, next});
-            last = next;
-            update();
-        }
-    // }
+    if (lines.isEmpty()) {
+        qDebug() << "Continue received before start";
+        return;
+    }
+    lines.last().append(QLine{last, next});
+    last = next;
+    update();
+}
+
+void DrawArea::receiveHandler(int type, QPoint point) {
+    switch (type) {
+        case START:
+            startLine(point);
+            break;
+        case CONTINUE:
+            continueLine(point);
+            break;
+        case CLEAR:
+            clearScreen();
+            break;
+        default:
+            qDebug() << "Fell Through";
+            break;
+    }
 }

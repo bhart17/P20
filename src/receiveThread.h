@@ -13,18 +13,15 @@ class ReceiveThread : public Thread {
     std::atomic<bool> finished{false};
 
    public slots:
-    void testRun();
     void run();
     void receive();
 
    signals:
-    void startLineSig(QPoint start);
-    void continueLineSig(QPoint next);
-    void clearScreenSig();
+    void receiveSignal(int type, QPoint point);
 
    private:
-    // void receive(unsigned int data);
     void deserialise(unsigned int data);
+    int count{0};
 };
 
 #endif

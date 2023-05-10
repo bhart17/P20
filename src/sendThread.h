@@ -13,21 +13,14 @@ class SendThread : public Thread {
     std::atomic<bool> finished{false};
 
    public slots:
-    void testRun();
-    void sendStartLine(QPoint start);
-    void sendContinueLine(QPoint next);
-    void sendClearScreen();
+    void sendHandler(int type, QPoint point);
     void run();
-
-    //    signals:
-    //     void send(unsigned int data);
 
    private:
     void send(unsigned int data);
     unsigned int serialise(type type, QPoint data);
-    unsigned int serialise(type type);
     QQueue<unsigned int> queue;
-    bool clock = false;
+    int count{0};
 };
 
 #endif  // SENDTHREAD_H

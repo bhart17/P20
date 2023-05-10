@@ -3,18 +3,22 @@
 DrawAreaSend::DrawAreaSend(QWidget* parent) : DrawArea(parent){};
 
 void DrawAreaSend::mousePressEvent(QMouseEvent* event) {
-    emit startLineSig(event->pos());
+    emit sendSignal(START, event->pos());
     startLine(event->pos());
+    event->accept();
 }
 
 void DrawAreaSend::mouseMoveEvent(QMouseEvent* event) {
-    if ((event->pos() - last).manhattanLength() > 25) {
-        emit continueLineSig(event->pos());
+    if ((event->pos() - last).manhattanLength() > 20) {
+        emit sendSignal(CONTINUE, event->pos());
         continueLine(event->pos());
     }
+    event->accept();
 }
 
 // void DrawAreaSend::mouseReleaseEvent(QMouseEvent* event) {
-//     lines.last().append(QLine{last, event->position().toPoint()});
-//     update();
+//     // emit continueLineSig(event->pos());
+//     emit sendSignal(event->pos());
+//     continueLine(event->pos());
+//     event->accept();
 // }

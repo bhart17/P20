@@ -1,8 +1,6 @@
 #ifndef DRAWAREASEND_H
 #define DRAWAREASEND_H
 
-#include <QWidget>
-
 #include "drawArea.h"
 
 class DrawAreaSend : public DrawArea {
@@ -11,15 +9,10 @@ class DrawAreaSend : public DrawArea {
    public:
     DrawAreaSend(QWidget *parent = nullptr);
 
-   signals:
-    void startLineSig(QPoint start);
-    void continueLineSig(QPoint next);
-    // void clearScreenSig();
-
    protected:
     void mousePressEvent(QMouseEvent *event);
-    // void mouseReleaseEvent(QMouseEvent *event);
     void mouseMoveEvent(QMouseEvent *event);
+    // void mouseReleaseEvent(QMouseEvent *event);
 };
 
 #endif  // DRAWAREASEND_H
