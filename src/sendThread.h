@@ -18,7 +18,7 @@ class SendThread : public Thread {
 
    private:
     void send(unsigned int data);
-    unsigned int serialise(type type, QPoint data);
+    unsigned int serialise(type type, QPoint point);
     QQueue<unsigned int> queue;
     int count{0};
 };

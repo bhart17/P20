@@ -1,6 +1,8 @@
 #ifndef CONSTS_H
 #define CONSTS_H
 
+const auto BITS = 23;
+
 const auto SLEEP_US = 8000;
 const auto TIMEOUT_MS = 14;
 
