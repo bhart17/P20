@@ -3,8 +3,8 @@
 
 const auto BITS = 23;
 
-const auto SLEEP_US = 8000;
-const auto TIMEOUT_MS = 14;
+const auto SLEEP_US = 10000;
+const auto TIMEOUT_MS = 20;
 
 const auto SEND_DATA = 0; // 26
 const auto SEND_CLOCK = 1; // 25
