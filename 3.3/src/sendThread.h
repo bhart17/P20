@@ -16,6 +16,7 @@ class SendThread : public Thread {
     void sendHandler(int type, QPoint point);
 
    private:
+    void send(unsigned int data);
     unsigned int serialise(type type, QPoint point);
 };
 
