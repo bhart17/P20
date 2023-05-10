@@ -35,7 +35,7 @@ int main(int argc, char* argv[]) {
     recThread->moveToThread(&threadR);
     QObject::connect(&threadR, &QThread::started, recThread,
                      &ReceiveThread::run);
-    threadR.start();
+    threadR.start(QThread::TimeCriticalPriority);
 
     // To start the sender thread:
     auto sendThread = new SendThread;
@@ -43,7 +43,7 @@ int main(int argc, char* argv[]) {
     threadS.setObjectName("Send Thread");
     sendThread->moveToThread(&threadS);
     QObject::connect(&threadS, &QThread::started, sendThread, &SendThread::run);
-    threadS.start();
+    threadS.start(QThread::HighPriority);
 
     QObject::connect((DrawAreaSend*)send.drawArea, &DrawAreaSend::sendSignal,
                      sendThread, &SendThread::sendHandler);
