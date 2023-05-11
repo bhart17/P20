@@ -13,8 +13,8 @@ int main(int argc, char* argv[]) {
     pinMode(SEND_CLOCK, OUTPUT);
     pinMode(REC_DATA, INPUT);
     pinMode(REC_CLOCK, INPUT);
-    pullUpDnControl(REC_DATA, PUD_DOWN);
-    pullUpDnControl(REC_CLOCK, PUD_DOWN);
+    // pullUpDnControl(REC_DATA, PUD_DOWN);
+    // pullUpDnControl(REC_CLOCK, PUD_DOWN);
     digitalWrite(SEND_CLOCK, true);
 
     QApplication app(argc, argv);
@@ -35,7 +35,8 @@ int main(int argc, char* argv[]) {
     recThread->moveToThread(&threadR);
     QObject::connect(&threadR, &QThread::started, recThread,
                      &ReceiveThread::run);
-    threadR.start(QThread::TimeCriticalPriority);
+                     
+    threadR.start(QThread::TimeCriticalPriority);   //Set receive thread to highest priority to ensure we don't miss data
 
     // To start the sender thread:
     auto sendThread = new SendThread;
@@ -43,10 +44,12 @@ int main(int argc, char* argv[]) {
     threadS.setObjectName("Send Thread");
     sendThread->moveToThread(&threadS);
     QObject::connect(&threadS, &QThread::started, sendThread, &SendThread::run);
-    threadS.start(QThread::HighPriority);
+    threadS.start(QThread::HighPriority);   //Set send thread to higher priority than main thread but lower than receive thread
 
+    //Connect the 'sendSignal' signal from drawAreaSend to the 'sendHandler' slot from sendThread
     QObject::connect((DrawAreaSend*)send.drawArea, &DrawAreaSend::sendSignal,
                      sendThread, &SendThread::sendHandler);
+    //Connect the 'receiveSignal' signal from recThread to the 'receiveHandler' slot from drawArea
     QObject::connect(recThread, &ReceiveThread::receiveSignal, receive.drawArea,
                      &DrawArea::receiveHandler);
 
@@ -59,6 +62,7 @@ int main(int argc, char* argv[]) {
 
     recThread->finished = true;
     sendThread->finished = true;
+    //Close the threads. wait() stops the program from ending until the threads have finished working.
     threadR.quit();
     threadS.quit();
     threadR.wait();

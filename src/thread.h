@@ -11,6 +11,8 @@
 
 #include "consts.h"
 
+
+//Both sendThread and receiveThread inherit from this Thread class
 class Thread : public QObject {
     Q_OBJECT
 
