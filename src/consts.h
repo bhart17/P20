@@ -16,6 +16,6 @@ const auto SEND_CLOCK = 1;  // 25
 const auto REC_DATA = 2;    // 24
 const auto REC_CLOCK = 3;   // 29
 
-enum type { CLEAR, START, CONTINUE };
+enum type { CLEAR, START, CONTINUE, COLOUR };
 
 #endif  // CONSTS_H

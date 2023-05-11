@@ -12,8 +12,11 @@ void DrawArea::paintEvent(QPaintEvent* event) {
     painter.setRenderHint(QPainter::Antialiasing);
     QPen pen(penColour, 3, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin);
     painter.setPen(pen);
-    for (QList<QList<QLine>>::const_iterator line = lines.begin();
-         line != lines.end(); ++line) {
+    QList<QList<QLine>>::const_iterator line = lines.begin();
+    QList<QColor>::const_iterator colour = colours.begin();
+    for (; line != lines.end() && colour != colours.end(); ++line, ++colour) {
+        pen.setColor(*colour);
+        painter.setPen(pen);
         painter.drawLines((*line).toVector());
     }
     event->accept();
@@ -27,6 +30,7 @@ void DrawArea::clearScreen() {
         // Each sublist needs to be cleared individually
         (*line).clear();
     }
+    colours.clear();
     lines.clear();
     update();
 }
@@ -38,6 +42,7 @@ void DrawArea::startLine(QPoint start) {
     } else if (!lines.last().isEmpty()) {
         lines.append(QList<QLine>{});
     }
+    colours.append(penColour);
     last = start;
 }
 
@@ -67,6 +72,13 @@ void DrawArea::receiveHandler(int type, QPoint point) {
         case CLEAR:
             clearScreen();
             break;
+        case COLOUR: {
+            auto red = point.x() & 255;
+            auto blue = ((point.x() & 0b1111000000) | ((point.y() & 16) << 4));
+            auto green = point.y() & 0b11111100;
+            penColour = QColor{qRgb(qRed(red), qBlue(blue), qGreen(green))};
+            break;
+        }
         default:
             qDebug() << "⚠️ Invalid type";
             break;
@@ -74,6 +86,12 @@ void DrawArea::receiveHandler(int type, QPoint point) {
 }
 
 void DrawArea::pickPenColour() {
-    QColor newColor = QColorDialog::getColor(penColour);
-    if (newColor.isValid()) penColour = newColor;
+    QColor newColour = QColorDialog::getColor(penColour);
+    if (newColour.isValid()) {
+        penColour = newColour;
+        emit sendSignal(
+            COLOUR,
+            QPoint{(penColour.red() >> 2) | ((penColour.green() >> 2) << 6),
+                   (penColour.green() >> 4) | ((penColour.blue() >> 2) << 2)});
+    }
 }

@@ -29,6 +29,7 @@ class DrawArea : public QWidget {
     void paintEvent(QPaintEvent *event);
     QPoint last;
     QList<QList<QLine>> lines;
+    QList<QColor> colours;
     QColor penColour{Qt::black};
 };
 
