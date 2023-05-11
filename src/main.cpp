@@ -6,8 +6,7 @@
 #include "sendWindow.h"
 
 int main(int argc, char* argv[]) {
-    // setup GPIO interface - uncomment when needed
-    // needs to run with root via sudo in terminal.
+    // Setup GPIO interface
     wiringPiSetup();
     pinMode(SEND_DATA, OUTPUT);
     pinMode(SEND_CLOCK, OUTPUT);
@@ -35,8 +34,8 @@ int main(int argc, char* argv[]) {
     recThread->moveToThread(&threadR);
     QObject::connect(&threadR, &QThread::started, recThread,
                      &ReceiveThread::run);
-                     
-    threadR.start(QThread::TimeCriticalPriority);   //Set receive thread to highest priority to ensure we don't miss data
+    // Set receive thread to highest priority to ensure we don't miss data
+    threadR.start(QThread::TimeCriticalPriority);
 
     // To start the sender thread:
     auto sendThread = new SendThread;
@@ -44,12 +43,16 @@ int main(int argc, char* argv[]) {
     threadS.setObjectName("Send Thread");
     sendThread->moveToThread(&threadS);
     QObject::connect(&threadS, &QThread::started, sendThread, &SendThread::run);
-    threadS.start(QThread::HighPriority);   //Set send thread to higher priority than main thread but lower than receive thread
+    // Set send thread to higher priority than main thread but lower than
+    // receive thread
+    threadS.start(QThread::HighPriority);
 
-    //Connect the 'sendSignal' signal from drawAreaSend to the 'sendHandler' slot from sendThread
+    // Connect the 'sendSignal' signal from drawAreaSend to the 'sendHandler'
+    // slot from sendThread
     QObject::connect((DrawAreaSend*)send.drawArea, &DrawAreaSend::sendSignal,
                      sendThread, &SendThread::sendHandler);
-    //Connect the 'receiveSignal' signal from recThread to the 'receiveHandler' slot from drawArea
+    // Connect the 'receiveSignal' signal from recThread to the 'receiveHandler'
+    // slot from drawArea
     QObject::connect(recThread, &ReceiveThread::receiveSignal, receive.drawArea,
                      &DrawArea::receiveHandler);
 
@@ -62,7 +65,8 @@ int main(int argc, char* argv[]) {
 
     recThread->finished = true;
     sendThread->finished = true;
-    //Close the threads. wait() stops the program from ending until the threads have finished working.
+    // Close the threads. wait() stops the program from ending until the threads
+    // have finished working.
     threadR.quit();
     threadS.quit();
     threadR.wait();

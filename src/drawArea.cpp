@@ -6,6 +6,7 @@ DrawArea::DrawArea(QWidget* parent) : QWidget(parent) {
     setPalette(QPalette{Qt::white});
 }
 
+// Handles paintEvents on the DrawArea
 void DrawArea::paintEvent(QPaintEvent* event) {
     QPainter painter(this);
     painter.setRenderHint(QPainter::Antialiasing);
@@ -18,16 +19,19 @@ void DrawArea::paintEvent(QPaintEvent* event) {
     event->accept();
 }
 
+// Clear the screen
 void DrawArea::clearScreen() {
     emit sendSignal(CLEAR, QPoint{0, 0});
     for (QList<QList<QLine>>::iterator line = lines.begin();
          line != lines.end(); ++line) {
+        // Each sublist needs to be cleared individually
         (*line).clear();
     }
     lines.clear();
     update();
 }
 
+// Save the first point of a line and setup sublist
 void DrawArea::startLine(QPoint start) {
     if (lines.isEmpty()) {
         lines.append(QList<QLine>{});
@@ -37,8 +41,11 @@ void DrawArea::startLine(QPoint start) {
     last = start;
 }
 
+// Append the next point of a line to its sublist
 void DrawArea::continueLine(QPoint next) {
     if (lines.isEmpty()) {
+        // If we receive an invalid CONTINUE, we use it as the start of a new
+        // line
         qDebug() << "⚠️ Continue received before start";
         startLine(next);
         return;
@@ -48,6 +55,7 @@ void DrawArea::continueLine(QPoint next) {
     update();
 }
 
+// This function handles all signals sent to DrawArea
 void DrawArea::receiveHandler(int type, QPoint point) {
     switch (type) {
         case START:

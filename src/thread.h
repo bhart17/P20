@@ -7,12 +7,10 @@
 #include <QQueue>
 #include <QThread>
 
+#include "consts.h"
 #include "wiringPi.h"
 
-#include "consts.h"
-
-
-//Both sendThread and receiveThread inherit from this Thread class
+// Both sendThread and receiveThread inherit from this Thread class
 class Thread : public QObject {
     Q_OBJECT
 
