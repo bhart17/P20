@@ -1,6 +1,7 @@
 #ifndef DRAWAREA_H
 #define DRAWAREA_H
 
+#include <QColorDialog>
 #include <QDebug>
 #include <QMouseEvent>
 #include <QPainter>
@@ -17,6 +18,7 @@ class DrawArea : public QWidget {
    public slots:
     void receiveHandler(int type, QPoint point);
     void clearScreen();
+    void pickPenColour();
 
    signals:
     void sendSignal(int type, QPoint point);
@@ -27,6 +29,7 @@ class DrawArea : public QWidget {
     void paintEvent(QPaintEvent *event);
     QPoint last;
     QList<QList<QLine>> lines;
+    QColor penColour{Qt::black};
 };
 
 #endif  // DRAWAREA_H

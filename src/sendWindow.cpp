@@ -12,6 +12,7 @@ SendWindow::SendWindow(QWidget* parent) : Window(parent) {
 void SendWindow::createMenus() {
     optionMenu = new QMenu(tr("&Options"), this);
     optionMenu->addAction(clearScreen);
+    optionMenu->addAction(penColourAct);
     menuBar()->addMenu(optionMenu);
 }
 
@@ -20,4 +21,9 @@ void SendWindow::createActions() {
     clearScreen = new QAction(tr("&Clear Screen"), this);
     clearScreen->setShortcut(tr("Ctrl+L"));
     connect(clearScreen, &QAction::triggered, drawArea, &DrawArea::clearScreen);
+
+    penColourAct = new QAction(tr("&Pen Color..."), this);
+    penColourAct->setShortcut(tr("Ctrl+P"));
+    connect(penColourAct, &QAction::triggered, drawArea,
+            &DrawArea::pickPenColour);
 }

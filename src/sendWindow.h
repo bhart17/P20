@@ -13,6 +13,7 @@ class SendWindow : public Window {
    public:
     explicit SendWindow(QWidget *parent = 0);
     QAction *clearScreen;
+    QAction *penColourAct;
 
    private:
     void createMenus();

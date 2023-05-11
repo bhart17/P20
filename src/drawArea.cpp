@@ -10,7 +10,7 @@ DrawArea::DrawArea(QWidget* parent) : QWidget(parent) {
 void DrawArea::paintEvent(QPaintEvent* event) {
     QPainter painter(this);
     painter.setRenderHint(QPainter::Antialiasing);
-    QPen pen(Qt::black, 3, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin);
+    QPen pen(penColour, 3, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin);
     painter.setPen(pen);
     for (QList<QList<QLine>>::const_iterator line = lines.begin();
          line != lines.end(); ++line) {
@@ -71,4 +71,9 @@ void DrawArea::receiveHandler(int type, QPoint point) {
             qDebug() << "⚠️ Invalid type";
             break;
     }
+}
+
+void DrawArea::pickPenColour() {
+    QColor newColor = QColorDialog::getColor(penColour);
+    if (newColor.isValid()) penColour = newColor;
 }

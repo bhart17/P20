@@ -16,9 +16,8 @@ void DrawAreaSend::mouseMoveEvent(QMouseEvent* event) {
     event->accept();
 }
 
-// void DrawAreaSend::mouseReleaseEvent(QMouseEvent* event) {
-//     // emit continueLineSig(event->pos());
-//     emit sendSignal(event->pos());
-//     continueLine(event->pos());
-//     event->accept();
-// }
+void DrawAreaSend::mouseReleaseEvent(QMouseEvent* event) {
+    emit sendSignal(CONTINUE, event->pos());
+    continueLine(event->pos());
+    event->accept();
+}
