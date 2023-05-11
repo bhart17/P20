@@ -73,10 +73,11 @@ void DrawArea::receiveHandler(int type, QPoint point) {
             clearScreen();
             break;
         case COLOUR: {
-            auto red = point.x() & 255;
-            auto blue = ((point.x() & 0b1111000000) | ((point.y() & 16) << 4));
-            auto green = point.y() & 0b11111100;
-            penColour = QColor{qRgb(qRed(red), qBlue(blue), qGreen(green))};
+            auto red = (point.x() & 0b111111) << 2;
+            auto green = (((point.x() & 0b1111000000) >> 4) | ((point.y() & 0b11) << 4));
+            auto blue = (point.y() & 0b11111100) >> 2;
+            penColour = QColor{qRgb(qRed(red), qGreen(green), qBlue(blue))};
+            qDebug() << red << green << blue << penColour;
             break;
         }
         default:
@@ -92,6 +93,6 @@ void DrawArea::pickPenColour() {
         emit sendSignal(
             COLOUR,
             QPoint{(penColour.red() >> 2) | ((penColour.green() >> 2) << 6),
-                   (penColour.green() >> 4) | ((penColour.blue() >> 2) << 2)});
+                   (penColour.green() >> 6) | ((penColour.blue() >> 2) << 2)});
     }
 }
